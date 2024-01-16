@@ -15,8 +15,21 @@ dat1 <- read_xlsx("C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Docume
                                 "logical","logical", 
                                 rep("guess",4) 
                                 ))
-dat1 <- dat1[dat1$include==T, ]
+dat1 <- dat1[dat1$Dataset!="Ogada",]
 dat1 <- dat1[dat1$Species %in% c("RUVU", "WBV") , ]
+# print dataset for appendix
+fields <- c("UnitID", "Dataset", "Species", "Stage", "WhereTrapped", 
+             "DateAdded", "DateOfLoss-last activity", 
+            "DaysWithTransmitter","include", "rehabbed",
+             "taglost", "founddead", "CauseOfMortality",
+            "UncertainFateTag")
+
+toprint <- dat1[, fields]
+#write.csv(toprint,
+#  file="C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\docs\\Appendix1.csv")
+dat1 <- dat1[dat1$include==T, ]
+
+
 # Setup time bins for survival matrices
 # seasonal dates based on equinoxes 
 # "long rains" March-May, "short-rains" Oct-Dec
@@ -113,7 +126,7 @@ last.val <- with(dat1, ifelse(taglost==F & founddead==F & is.na(DateOfMortality)
 last.val2 <- c()
 for (i in 1:nrow(ch)){
   ch[i,last[i] ] <- last.val[i] 
-  if(dat1$UncertainFate[i]==T){
+  if(dat1$UncertainFateTag[i]==T){
     ch[i,last[i] ] <- 5
   }
   last.val2[i] <- ch[i,last[i] ]
@@ -133,7 +146,6 @@ for (i in 1:nrow(ch)){
   live.seq[[i]] <- c(ch[i, f[i]:last2[i]])
 }
 
-
 #***************************
 #* Calculate age of birds and 
 #* Age of tags
@@ -142,8 +154,6 @@ bird.age <- array(NA, dim=dim(ch), dimnames=dimnames(ch))
 for (i in 1:nrow(ch)){
   bird.age[i, f[i] ] <- as.numeric(dat1$Age2[i]) 
 }
-
-
 
 df <- data.frame(time=dat1$DaysWithTransmitter, 
                  censored=ifelse(dat1$Censored=="Y", T, F), 
@@ -211,7 +221,6 @@ if ( ch[i, last2[i] ] == 2 ) {
 }
 z.inits[!is.na(zmat)] <- NA
 
-
 tag.age <- array(NA, dim(ch), dimnames=dimnames(ch))
 len <- sums <- c()
 for (i in 1:nind){
@@ -233,7 +242,7 @@ datl <- list(
   k=last2, # last time observed prior to censured length nind. 
   known= known, # whether age was known or not, subadults are unknown
   first_age=as.numeric(dat1$Age2), # data matrix of known first ages, but NAs for unknown ages
-  managed.cat=man.cat,
+  managed.cat=ifelse(yr.cont<0,0,1),
   year.cont=yr.cont,
   year.factor=yr.factor,
   rehabbed=ifelse(dat1$rehabbed==T, 1, 0),
@@ -246,6 +255,15 @@ datl <- list(
   region= ifelse(dat1$Region=="N", 1, 0),
   study=as.numeric(as.factor(dat1$Dataset))
   )
+# impute median for unknown ages  
+datl$first_age[is.na(datl$first_age)] <- median(1:6) 
 
 save(datl=datl, get.last=get.last2, get.first=get.first, 
      file="data\\data.RData")
+
+
+# data summaries
+table(datl$y[datl$sp==0, ]) ; sum(table(datl$y[datl$sp==0, ]))
+table(datl$y[datl$sp==1, ]) ; sum(table(datl$y[datl$sp==1, ]))
+table(datl$y) ; sum(table(datl$y))
+                    
