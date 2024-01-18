@@ -1,5 +1,5 @@
 
-load("C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\outputs\\gyps-cat.RData")
+load("C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\outputs\\gyps-cat2.RData")
 library(MCMCvis)
 library (coda)
 library (ggplot2)
@@ -7,12 +7,7 @@ library (reshape2)
 library (tidybayes)
 options(scipen=999)
 
-pars <- c(  "beta1", "beta2", "delta1", "delta2", "delta3", "delta4",
-            "mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead",
-            "sigma.s", "eps.s",
-            "l.s", "l.tagfail", "l.p.tagfail", "l.p.dead")
-
-pars <- c(  "beta", "delta", "gamma", "eta",
+pars <- c(  "beta", "delta", #"gamma", "eta",
             "mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead",
             "sigma.s", 
             "l.s", "l.tagfail", "l.p.tagfail", "l.p.dead")
@@ -73,7 +68,7 @@ pyta <- ggplot() + theme_minimal() +
 pmta <- ggplot() + theme_minimal() +
   geom_line(data=lp.ta, aes(x=tagage, y=pred, group=iter),
             color="gray40", linewidth=0.5, alpha=0.05) +
-  geom_line(data=df, aes(x=ta, y=mn), linewidth=2) +
+  geom_line(data=df, aes(x=ta, y=md), linewidth=2) +
   geom_line(data=df, aes(x=ta, y=lhdi85), linewidth=2, linetype="dashed") +
   geom_line(data=df, aes(x=ta, y=uhdi85), linewidth=2, linetype="dashed") +
   geom_line(data=df, aes(x=ta, y=lhdi95), linewidth=1, linetype="dashed") +
@@ -84,6 +79,10 @@ ggsave("C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projec
        pyta, device="tiff", 
        width=6.5, height=4, units="in", dpi=300)
 
+ggsave("C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\docs\\figs\\transmitter age and failure-byMonth.tiff",
+       pmta, device="tiff", 
+       width=6.5, height=4, units="in", dpi=300)
+
 df2 <- data.frame(md =1-((1-md)^12), 
                   lhdi95= 1-((1-lhdi95)^12),
                   uhdi95=1-((1-uhdi95)^12)    
@@ -91,18 +90,22 @@ df2 <- data.frame(md =1-((1-md)^12),
 #****************
 #* plot survival by age class
 #****************
-lss <- melt(p$mean.s)
+load("C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\outputs\\gyps-simplified.RData")
+p3 <- MCMCpstr(post, pars, type="chains")
+lss <- melt(p3$mean.s)
 
-p2 <- lss |>
+ps2 <- lss |>
       ggplot(aes(x = value, y = Var1)) + theme_minimal() +
       scale_y_discrete(labels=c("First year", "Subadult", "Adult")) +
       stat_halfeye(.width=c(0.85, 0.95), point_interval="median_hdi") +
-      ylab("Age class") + xlab("Survival (monthly probability)")
-p3 <- lss |>
+      ylab("Age class") + xlab("Survival (monthly probability)") +
+      coord_flip()
+ps3 <- lss |>
       ggplot(aes(x = value^12, y = Var1)) + theme_minimal() +
       scale_y_discrete(labels=c("First year", "Subadult", "Adult")) +
       stat_halfeye(.width=c(0.85, 0.95), point_interval="median_hdi") +
-      ylab("Age class") + xlab("Survival (yearly probability)")
+      ylab("Age class") + xlab("Survival (yearly probability)") +
+      coord_flip() 
 
 # Calculate yearly survival for results
 lss$yr.s<- lss$value^12
@@ -128,18 +131,17 @@ for (m in 1:2){
 lp.man <- melt(pred.man)
 colnames(lp.man)[1:3] <- c("Ageclass", "man", "iter" )
 lp.man$pred <- plogis(lp.man$value)
-#lp.yr <- lp.yr[lp.yr$yr<=2011 | lp.yr$yr>=2017,]
 
-mn <- plogis(apply(pred.man, c(1,2), median, na.rm=T))
+md <- plogis(apply(pred.man, c(1,2), median, na.rm=T))
 lhdi95 <- plogis(apply(pred.man, c(1,2), HDInterval::hdi, na.rm=T)[1,,])
 uhdi95 <- plogis(apply(pred.man, c(1,2), HDInterval::hdi, na.rm=T)[2,,])
 lhdi85 <- plogis(apply(pred.man, c(1,2), HDInterval::hdi, na.rm=T, credMass=0.85)[1,,])
 uhdi85 <- plogis(apply(pred.man, c(1,2), HDInterval::hdi, na.rm=T, credMass=0.85)[2,,])
 
-df <- data.frame(melt(mn), 
+df <- data.frame(melt(md), 
                  lhdi95=melt(lhdi95)[,3], uhdi95=melt(uhdi95)[,3],
                  lhdi85=melt(lhdi85)[,3], uhdi85=melt(uhdi85)[,3])
-colnames(df)[1:3] <- c("Ageclass", "man", "Mean") 
+colnames(df)[1:3] <- c("Ageclass", "man", "median") 
 
 
 p4 <- ggplot(data=lp.man, aes(x=pred^12, y=man)) + theme_minimal() +
@@ -153,6 +155,7 @@ p4 <- ggplot(data=lp.man, aes(x=pred^12, y=man)) + theme_minimal() +
 ggsave("C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\docs\\figs\\survival-ageclass-management.tiff",
        p4, device="tiff", 
        width=6.5, height=4, units="in", dpi=300)
+
 #***************
 #* Plot effect from year of study on tag failure
 #***************
@@ -161,25 +164,26 @@ yr.sc <- (yr-2016)/7
 ni <- 4000
 pred.tf.yr <- array(NA, dim=c(length(yr.sc), ni), dimnames=list(yr, 1:ni) )
 for (i in 1:length(yr.sc)){
-  pred.tf.yr[i,] <- p$l.tagfail[1,] + p$beta[3,]*yr.sc[i]
+  pred.tf.yr[i,] <- p$l.tagfail[1,] + p$beta[3,]*yr.sc[i] + p$beta[4,]*yr.sc[i]^2
 }
 lp.tf.yr <- melt(pred.tf.yr)
 colnames(lp.tf.yr)[1:2] <- c("year", "iter" )
 lp.tf.yr$pred <- plogis(lp.tf.yr$value)
-mn <- plogis(apply(pred.tf.yr, 1, mean, na.rm=T))
+md <- plogis(apply(pred.tf.yr, 1, median, na.rm=T))
 lhdi95 <- plogis(apply(pred.tf.yr, 1, HDInterval::hdi, na.rm=T)[1,])
 uhdi95 <- plogis(apply(pred.tf.yr, 1, HDInterval::hdi, na.rm=T)[2,])
 lhdi85 <- plogis(apply(pred.tf.yr, 1, HDInterval::hdi, na.rm=T, credMass=0.85)[1,])
 uhdi85 <- plogis(apply(pred.tf.yr, 1, HDInterval::hdi, na.rm=T, credMass=0.85)[2,])
-df <- data.frame(mn=mn, 
+df <- data.frame(md=md, 
                  lhdi95=lhdi95, uhdi95=uhdi95, 
                  lhdi85=lhdi85, uhdi85=uhdi85,
-                 yr=yr)
+                 yr=yr, 
+                 md12= 1-((1-md)^12) )
 
 pyty <- ggplot() + theme_minimal() +
   geom_line(data=lp.tf.yr, aes(x=year, y=1-((1-pred)^12), group=iter),
             color="gray40", linewidth=0.5, alpha=0.05) +
-  geom_line(data=df, aes(x=yr, y=1-((1-mn)^12)), linewidth=2) +
+  geom_line(data=df, aes(x=yr, y=1-((1-md)^12)), linewidth=2) +
   geom_line(data=df, aes(x=yr, y=1-((1-lhdi85)^12)), linewidth=2, linetype="dashed") +
   geom_line(data=df, aes(x=yr, y=1-((1-uhdi85)^12)), linewidth=2, linetype="dashed") +
   geom_line(data=df, aes(x=yr, y=1-((1-lhdi95)^12)), linewidth=1, linetype="dashed") +
@@ -189,7 +193,7 @@ pyty <- ggplot() + theme_minimal() +
 pmty <- ggplot() + theme_minimal() +
   geom_line(data=lp.tf.yr, aes(x=year, y=pred, group=iter),
             color="gray40", linewidth=0.5, alpha=0.05) +
-  geom_line(data=df, aes(x=yr, y=mn), linewidth=2) +
+  geom_line(data=df, aes(x=yr, y=md), linewidth=2) +
   geom_line(data=df, aes(x=yr, y=lhdi85), linewidth=2, linetype="dashed") +
   geom_line(data=df, aes(x=yr, y=uhdi85), linewidth=2, linetype="dashed") +
   geom_line(data=df, aes(x=yr, y=lhdi95), linewidth=1, linetype="dashed") +
@@ -199,6 +203,15 @@ pmty <- ggplot() + theme_minimal() +
 ggsave("C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\docs\\figs\\tagfailure-year.tiff",
        pyty, device="tiff", 
        width=6.5, height=4, units="in", dpi=300)
+
+ggsave("C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\docs\\figs\\tagfailure-month.tiff",
+       pmty, device="tiff", 
+       width=6.5, height=4, units="in", dpi=300)
+
+df2 <- data.frame(md =1-((1-md)^12), 
+                  lhdi95= 1-((1-lhdi95)^12),
+                  uhdi95=1-((1-uhdi95)^12)    
+)
 
 #*#****************
 #* survival by 

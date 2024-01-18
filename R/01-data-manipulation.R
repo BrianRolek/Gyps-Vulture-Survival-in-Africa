@@ -25,8 +25,8 @@ fields <- c("UnitID", "Dataset", "Species", "Stage", "WhereTrapped",
             "UncertainFateTag")
 
 toprint <- dat1[, fields]
-#write.csv(toprint,
-#  file="C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\docs\\Appendix1.csv")
+write.csv(toprint,
+ file="C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\docs\\Appendix1.csv")
 dat1 <- dat1[dat1$include==T, ]
 
 

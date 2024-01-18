@@ -64,7 +64,7 @@ code <- nimbleCode({
   for (x in 1:3){
     delta[x] ~ dnorm(0, sd=10) # covariates for survival        
   } # x
-  for (xxxx in 1:3){
+  for (xxxx in 1:4){
   beta[xxxx] ~ dnorm(0, sd=10) # covariates for tagloss  
 } # xxxx
 
@@ -96,7 +96,8 @@ code <- nimbleCode({
       logit(tagfailed[i,t]) <- l.tagfail + 
                                 beta[1]*tag.age.sc[i,t] + 
                                 beta[2]*tag.age.sc[i,t]^2 + 
-                                beta[3]*year.cont[t]
+                                beta[3]*year.cont[t] +
+                                beta[4]*year.cont[t]^2
       logit(p.tagfailed[i,t]) <- l.p.tagfail  # prob of detecting tag failure
       logit(p.dead[i,t]) <- l.p.dead  # probability of dead recovery
     } #t
@@ -189,7 +190,7 @@ code <- nimbleCode({
 #fa.inits <- rep(NA, times=datl$nind)
 #fa.inits[is.na(datl$first_age)] <- 3
 inits <- function(){ list(z=datl$z.inits,
-                         beta = rnorm(3,0,0.5),
+                         beta = rnorm(4,0,0.5),
                          delta = rnorm(3,0,0.5),
                          mean.s = runif(3,0,1), 
                          mean.tagfail = runif(1), 
@@ -216,7 +217,7 @@ mc <- buildMCMC(conf, project=cmod)
 cmc <- compileNimble(mc, project=cmod, showCompilerOutput = TRUE)
 printErrors()
 
-nc <- 1; nt <- 100; ni <- 200000; nb <- 100000
+nc <- 1; nt <- 200; ni <- 400000; nb <- 200000
 #nc <- 1; nt <- 5; ni <- 200; nb <- 100
 
 post <- runMCMC(cmc,
