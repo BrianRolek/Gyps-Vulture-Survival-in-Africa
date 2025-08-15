@@ -216,9 +216,9 @@ ggsave("figs\\survival-ageclass.tiff",
 
 # Calculate PDs for age classes
 s.diffs <- list()
-s.diffs[[2]] <- p3$mean.s[3,] - p3$mean.s[2,]
-s.diffs[[1]] <- p3$mean.s[3,] - p3$mean.s[1,]
-s.diffs[[3]] <- p3$mean.s[2,] - p3$mean.s[1,]
+s.diffs[[1]] <- p$mean.s[3,] - p$mean.s[2,]
+s.diffs[[2]] <- p$mean.s[3,] - p$mean.s[1,]
+s.diffs[[3]] <- p$mean.s[2,] - p$mean.s[1,]
 lapply(s.diffs, pd)
 
 #****************
