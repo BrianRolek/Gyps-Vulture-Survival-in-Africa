@@ -49,20 +49,21 @@ dat1 <- dat1[dat1$include==T, ]
 
 # Monthly setup
 smonth <- list()
+years <- 2009:2025
 for (i in 1:12){ 
-  smonth[[i]] <- c(paste0(i,"/1/", 2009:2023)) 
+  smonth[[i]] <- c(paste0(i,"/1/", years)) 
 }
 s1 <- sort(mdy(do.call(c, smonth)))
 mlength1 <- c(31,28,31,30,
               31,30,31,31,
               30,31,30,31)
 emonth <- list()
-dy <- ifelse(leap_year(2009:2023), 29, 28)
+dy <- ifelse(leap_year(years), 29, 28)
 for (i in 1:12){
   if(i==2){
-  emonth[[i]] <- c(paste0(i,"/",dy,"/", 2009:2023))
+  emonth[[i]] <- c(paste0(i,"/",dy,"/", years))
   } else{
-    emonth[[i]] <- c(paste0(i,"/",mlength1[i],"/", 2009:2023))
+    emonth[[i]] <- c(paste0(i,"/",mlength1[i],"/", years))
   }
 }
 e1 <- sort(mdy(do.call(c, emonth)))
@@ -257,6 +258,11 @@ datl <- list(
   )
 # impute median for unknown ages  
 datl$first_age[is.na(datl$first_age)] <- median(1:6) 
+y.first <- c()
+for (i in 1:nrow(datl$y)) {
+  y.first[i] <- datl$y[i, datl$f[i]]
+}
+datl$y.first <- y.first
 
 save(datl=datl, get.last=get.last2, get.first=get.first, 
      file="data\\data.RData")

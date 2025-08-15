@@ -1,9 +1,10 @@
 library ('nimble')
 library('parallel')
 
-load("/bsuscratch/brianrolek/gyps/data.RData")
-#load("data\\data.RData")
+#load("/bsuscratch/brianrolek/gyps/data.RData")
+load("data\\data.RData")
 set.seed(5757575)
+
 
 run <- function(seed, datl){
   library('nimble')
@@ -34,7 +35,7 @@ run <- function(seed, datl){
     # p.tagfail: probability of observing a tag failure
     # -------------------------------------------------
     # States (S):
-    # 1 presumed alive with functioning transmitter
+    # 1 alive with functioning transmitter
     # 2 presumed alive, transmitter failed or lost
     # 3 dead recovery with functioning transmitter
     # 4 dead, transmitter failed or dropped
@@ -57,20 +58,17 @@ run <- function(seed, datl){
     
     mean.tagfail ~ dbeta(1, 1)   # uninformative prior for all MONTHLY survival probabilities
     l.tagfail <- logit(mean.tagfail)
+    
     mean.p.tagfail ~ dbeta(1, 1)   # uninformative prior for all MONTHLY survival probabilities
     l.p.tagfail <- logit(mean.p.tagfail)    # logit transformed survival intercept
     
-    for (x in 1:3){
-      delta[x] ~ dnorm(0, sd=10) # covariates for survival        
-    } # x
-    for (xxxx in 1:4){
-      beta[xxxx] ~ dnorm(0, sd=10) # covariates for tagloss  
+    # for (x in 1:3){
+    #   delta[x] ~ dnorm(0, sd=10) # covariates for survival        
+    # } # x
+    for (xxxx in 1:2){
+      beta[xxxx] ~ dnorm(0, sd=10) # covariates for tagloss
     } # xxxx
     
-    for (yr in 1:(nyears)){
-      eps.s[yr] ~ dnorm(0, sd=sigma.s)
-    }
-    sigma.s ~ dexp(1)
     # pi[1,] just simulates values but is unused in model
     # alpha[1:6] <- c(1,1,1,1,1,1)
     # pi[1,1:6] ~ ddirch(alpha[1:6])
@@ -86,17 +84,14 @@ run <- function(seed, datl){
         age[i,t] <- ( first_age[i] + t/12 - f[i]/12 )
         age.class[i,t] <- ifgreaterFun( age[i,t], 1, 6 ) # translate to age classes: 0 yro first-year, 1-5 yro subadult, and >=6 yro adult
         
-        logit(s[i,t]) <- l.s[ age.class[i,t] ] + 
+        logit(s[i,t]) <- l.s[ age.class[i,t] ] #+ 
           #delta[1]*managed.cat[t] + 
           #delta[2]*rehabbed[i] + 
-          #delta[3]*sp[i] +
-          eps.s[ year.factor[t] ]
+          #delta[3]*sp[i] 
         
         logit(tagfailed[i,t]) <- l.tagfail + 
-          beta[1]*tag.age.sc[i,t] + 
-          beta[2]*tag.age.sc[i,t]^2 + 
-          beta[3]*year.cont[t] + 
-          beta[4]*year.cont[t]^2
+          beta[1]*tag.age.sc[i,t] +
+          beta[2]*year.cont[t] 
         logit(p.tagfailed[i,t]) <- l.p.tagfail  # prob of detecting tag failure
         logit(p.dead[i,t]) <- l.p.dead  # probability of dead recovery
       } #t
@@ -158,8 +153,8 @@ run <- function(seed, datl){
         po[3,i,t,5]<-(1-p.dead[i,t])
         
         po[4,i,t,1]<-0
-        po[4,i,t,2]<-0
-        po[4,i,t,3]<-0
+        po[4,i,t,2]<-p.tagfailed[i,t]*(1-p.dead[i,t])
+        po[4,i,t,3]<-(1-p.tagfailed[i,t])*p.dead[i,t]
         po[4,i,t,4]<-p.tagfailed[i,t]*p.dead[i,t]
         po[4,i,t,5]<-(1-p.tagfailed[i,t])*(1-p.dead[i,t])
         
@@ -189,8 +184,8 @@ run <- function(seed, datl){
   #fa.inits <- rep(NA, times=datl$nind)
   #fa.inits[is.na(datl$first_age)] <- 3
   inits <- function(){ list(z=datl$z.inits,
-                            beta = rnorm(4,0,0.5),
-                            delta = rnorm(3,0,0.5),
+                            beta = rnorm(2,0,0.5),
+                            #delta = rnorm(3,0,0.5),
                             mean.s = runif(3,0,1), 
                             mean.tagfail = runif(1), 
                             mean.p.tagfail =  runif(1), 
@@ -202,9 +197,9 @@ run <- function(seed, datl){
                             
   )}
   
-  pars <- c(  "beta", "delta", 
+  pars <- c(  "beta", 
+              #"delta", 
               "mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead",
-              "sigma.s", "eps.s",
               "l.s", "l.tagfail", "l.p.tagfail", "l.p.dead") 
   
   nimbleOptions(showCompilerOutput= TRUE)        
@@ -216,8 +211,10 @@ run <- function(seed, datl){
   cmc <- compileNimble(mc, project=cmod, showCompilerOutput = TRUE)
   printErrors()
   
-  nc <- 1; nt <- 200; ni <- 400000; nb <- 200000
+  nc <- 1; nt <- 50; ni <- 100000; nb <- 50000
+  #nc <- 1; nt <- 25; ni <- 50000; nb <- 25000
   #nc <- 1; nt <- 5; ni <- 200; nb <- 100
+  
   
   post <- runMCMC(cmc,
                   niter = ni, 
@@ -235,7 +232,4 @@ post <- parLapply(cl = this_cluster,
                   fun = run,
                   datl=datl)
 stopCluster(this_cluster)
-#save(post, datl, file="outputs/gyps-cat.RData")
-#save(post, datl, file="outputs/gyps-simplified.RData")
-# save(post, datl, file="outputs/gyps-nimble-age-managecat.RData")
- save(post, datl, file="/bsuscratch/brianrolek/gyps/gyps-simplified.RData")
+save(post, datl, file="outputs/gyps-7Aug2025-simplified.RData")
