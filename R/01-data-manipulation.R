@@ -31,22 +31,6 @@ dat1 <- dat1[dat1$include==T, ]
 
 
 # Setup time bins for survival matrices
-# seasonal dates based on equinoxes 
-# "long rains" March-May, "short-rains" Oct-Dec
-# Chamberlin and Wairoto 1997
-# this pub cites Anyaba 1983 and Ogallo 1988
-# Wet Dry season setup
-# s1 <- sort(mdy(c(paste0(c("1/1/"), 2009:2023), 
-#         paste0(c("3/1/"), 2009:2023),
-#         paste0(c("6/1/"), 2009:2023),
-#         paste0(c("10/1/"), 2009:2023))))
-# e1 <- sort(mdy( c(ifelse(leap_year(2009:2023), 
-#              paste0(c("2/29/"), 2009:2023),
-#              paste0(c("2/28/"), 2009:2023)), # account for leap years
-#              paste0(c("5/31/"), 2009:2023),
-#              paste0(c("9/31/"), 2009:2023),
-#              paste0(c("12/31/"), 2009:2023)) ))
-
 # Monthly setup
 smonth <- list()
 years <- 2009:2025
@@ -163,7 +147,7 @@ df <- data.frame(time=dat1$DaysWithTransmitter,
                  species=as.factor(dat1$Species ), 
                  gyps=as.factor(ifelse(dat1$Species %in% c("RUVU", "WBV"), "gyps", "non-gyps") ) ) 
 df$event <- ifelse(df$censored==T, 0, 1)
-# too few LFV and RUVU during the managed period
+# too few LFV during the later period
 # subset to WBV
 table(df$species, df$managed)
 table(df$species, df$dead, df$managed)
@@ -179,49 +163,21 @@ yr.factor <- as.numeric(factor(yr))
 known1 <- as.numeric(!is.na(as.numeric(dat1$Age2)))
 known <- ifelse(known1==1, 1, 2)
 # z values for directly observed states
-zmat <- ifelse(ch<=4, ch, NA)
-first_zs <- c()
-for (i in 1:nrow(zmat)){
-  first_zs[i] <- zmat[i,f[i]] 
-  zmat[i, f[i] ] <- NA # sub in NA for first capture
-}
+# zmat <- ifelse(ch<=4, ch, NA)
+# first_zs <- c()
+# for (i in 1:nrow(zmat)){
+#   first_zs[i] <- zmat[i,f[i]] 
+#   zmat[i, f[i] ] <- NA # sub in NA for first capture
+# }
+# 
+# for (i in 1:nrow(zmat)){
+# if (last.val2[i]==3){
+#   zmat[i, (last2[i]+1) :ntime  ] <- 5
+# }}
 
-for (i in 1:nrow(zmat)){
-if (last.val2[i]==3){
-  zmat[i, (last2[i]+1) :ntime  ] <- 5
-}}
+#lastz <- apply(zmat, 1, get.last2)
 
-lastz <- apply(zmat, 1, get.last2)
-
-# z initial values for states that weren't observed
-z.inits <- array(NA, dim(zmat), dimnames(zmat))
-for (i in 1:nrow(z.inits)){ 
-  indz1  <- ifelse(lastz[i]==ncol(z.inits), ncol(z.inits), lastz[i]+1)
-  indz2  <- ifelse(lastz[i]==ncol(z.inits), ncol(z.inits), lastz[i]+2)
-  ind1  <- ifelse(last2[i]==ncol(z.inits), ncol(z.inits), last2[i]+1)
-  ind2 <- ifelse(last2[i]==ncol(z.inits), ncol(z.inits), last2[i]+2)
-  if ( ch[i, last2[i] ] == 1 ) {
-  z.inits[i, ind1] <- 3
-  z.inits[i, (ind2):ncol(z.inits)] <- 5
-  #next
-  } # zlast=1
-if ( ch[i, last2[i] ] == 2 ) {
-  z.inits[i, (ind1)] <- 4
-  z.inits[i, (ind2):ncol(z.inits)] <- 5
-  #next
-} # zlast=2
- if ( ch[i, last2[i] ] %in% c(3,4) ) {
-   z.inits[i, (ind1):ncol(z.inits)] <- 5
-   #next
- } # zlast=3 or 4
-  if ( ch[i, last2[i] ] == 5 ) {
-    z.inits[i, last2[i] ] <- 3
-    z.inits[i, (ind1):ncol(z.inits)] <- 5
-    #next
-  } # zlast=5
-}
-z.inits[!is.na(zmat)] <- NA
-
+# Calculate tag age
 tag.age <- array(NA, dim(ch), dimnames=dimnames(ch))
 len <- sums <- c()
 for (i in 1:nind){
@@ -236,26 +192,24 @@ man.cat <- array(0, dim(ch), dimnames=dimnames(ch))
 man.cat[,31:ntime] <- 1
 
 datl <- list(
-  y=ch, # observation matrix
-  z=zmat, # known state matrix
-  z.inits = z.inits,
+  y=ch # observation matrix
+  )
+
+constl <- list(
   f=as.numeric(f),# time interval of first capture
   k=last2, # last time observed prior to censured length nind. 
-  known= known, # whether age was known or not, subadults are unknown
+  known=known, # whether age was known or not, subadults are unknown
   first_age=as.numeric(dat1$Age2), # data matrix of known first ages, but NAs for unknown ages
-  managed.cat=ifelse(yr.cont<0,0,1),
+  period.cat=ifelse(yr.cont<0,0,1),
   year.cont=yr.cont,
-  year.factor=yr.factor,
   rehabbed=ifelse(dat1$rehabbed==T, 1, 0),
   nind= nrow(ch),
   ntime= ncol(ch),
   nyears= length(unique(yr.factor)), 
-  first_zs= first_zs, 
   tag.age.sc= tag.age.sc, 
-  sp=ifelse(dat1$Species=="WBV", 0, 1),
-  region= ifelse(dat1$Region=="N", 1, 0),
-  study=as.numeric(as.factor(dat1$Dataset))
-  )
+  sp=ifelse(dat1$Species=="WBV", 0, 1)
+)
+
 # impute median for unknown ages  
 datl$first_age[is.na(datl$first_age)] <- median(1:6) 
 y.first <- c()
@@ -264,7 +218,7 @@ for (i in 1:nrow(datl$y)) {
 }
 datl$y.first <- y.first
 
-save(datl=datl, get.last=get.last2, get.first=get.first, 
+save(datl=datl, constl, get.last=get.last2, get.first=get.first, 
      file="data\\data.RData")
 
 

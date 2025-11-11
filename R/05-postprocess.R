@@ -210,9 +210,9 @@ tapply(lss$yr.s, lss$Var1, mean)
 tapply(lss$yr.s, lss$Var1, HDInterval::hdi, credMass=0.95)
 tapply(lss$yr.s, lss$Var1, HDInterval::hdi, credMass=0.85)
 
-ggsave("figs\\survival-ageclass.tiff",
-       ps3, device="tiff", 
-       width=6.5, height=4, units="in", dpi=300)
+# ggsave("figs\\survival-ageclass.tiff",
+#        ps3, device="jpeg", 
+#        width=6.5, height=4, units="in", dpi=300)
 
 # Calculate PDs for age classes
 s.diffs <- list()
@@ -220,6 +220,8 @@ s.diffs[[1]] <- p$mean.s[3,] - p$mean.s[2,]
 s.diffs[[2]] <- p$mean.s[3,] - p$mean.s[1,]
 s.diffs[[3]] <- p$mean.s[2,] - p$mean.s[1,]
 lapply(s.diffs, pd)
+apply(p3$mean.s^12, 1, median)
+apply(p3$mean.s^12, 1, HDInterval::hdi)
 
 #****************
 #* plot survival in response to management/time
@@ -247,15 +249,15 @@ p4 <- ggplot(data=lp.man, aes(x=pred^12, y=Period)) + theme_minimal() +
   xlim(0,1) +
   coord_flip() +
   ylab("Period") + xlab("Survival (yearly probability)") +
-  ggtitle("(A) Management")
+  ggtitle("(A) Period")
 
-ggsave("figs\\survival-ageclass-management.tiff",
-       p4, device="tiff", 
-       width=6.5, height=4, units="in", dpi=300)
+# ggsave("figs\\survival-ageclass-management.tiff",
+#        p4, device="jpeg", 
+#        width=6.5, height=4, units="in", dpi=300)
 
 all_p <- ggarrange(p4, ps3, nrow=2)
-ggsave("figs\\survival-ageclass-management-combined.tiff",
-       all_p, device="tiff", 
+ggsave("figs\\survival-ageclass-period-combined.tiff",
+       all_p, device="jpeg", 
        width=6, height=6, units="in", dpi=300)
 
 # Table 3 
@@ -363,4 +365,75 @@ df2 <- data.frame(md =1-((1-md)^12),
                   uhdi95=1-((1-uhdi95)^12)    
 )
 
+#********************
+#* Sensitivity test
+#********************
+#*Compare mresults models with 
+#*those having changed data
+#* state two to three
+load("outputs/gyps-15Aug2025-sensitivitytest.RData")
+post.sens23 <- post1
+p23 <- MCMCpstr(post1, pars, type="chains")
 
+iters <- ncol(p23$delta)
+MCMCtrace(post.sens23, "beta", pdf=F, Rhat=T, 
+          priors=rnorm(iters, 0, 10), post_zm = FALSE)       
+MCMCtrace(post.sens23, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead"), pdf=F, Rhat=T, 
+          priors=rbeta(iters, 1, 1), post_zm = FALSE)  
+
+sum95.sens23 <- MCMCsummary(post.sens23, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
+                            hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
+coef.est.sens23 <- data.frame(Parameter= rownames(sum95.sens23),
+                              Median=sum95.sens23$md, 
+                              Mean=sum95.sens23$mean,
+                              LHDI95=sum95.sens23$`95%_HPDL`, 
+                              UHDI95=sum95.sens23$`95%_HPDU`,
+                              p= sum95.sens23$`p>0`, 
+                              Rhat=sum95.sens23$Rhat
+)
+
+post.sens24 <- post2
+p24 <- MCMCpstr(post2, pars, type="chains")
+
+iters <- ncol(p24$delta)
+MCMCtrace(post.sens24, "beta", pdf=F, Rhat=T, 
+          priors=rnorm(iters, 0, 10), post_zm = FALSE)       
+MCMCtrace(post.sens24, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead"), pdf=F, Rhat=T, 
+          priors=rbeta(iters, 1, 1), post_zm = FALSE)  
+
+sum95.sens24 <- MCMCsummary(post.sens24, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
+                             hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
+coef.est.sens24 <- data.frame(Parameter= rownames(sum95.sens24),
+                               Median=sum95.sens24$md, 
+                               Mean=sum95.sens24$mean,
+                               LHDI95=sum95.sens24$`95%_HPDL`, 
+                               UHDI95=sum95.sens24$`95%_HPDU`,
+                               p= sum95.sens24$`p>0`, 
+                               Rhat=sum95.sens24$Rhat
+)
+
+post.sens25 <- post3
+p25 <- MCMCpstr(post3, pars, type="chains")
+
+iters <- ncol(p25$delta)
+MCMCtrace(post.sens25, "beta", pdf=F, Rhat=T, 
+          priors=rnorm(iters, 0, 10), post_zm = FALSE)       
+MCMCtrace(post.sens25, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead"), pdf=F, Rhat=T, 
+          priors=rbeta(iters, 1, 1), post_zm = FALSE)  
+
+sum95.sens25 <- MCMCsummary(post.sens25, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
+                            hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
+coef.est.sens25 <- data.frame(Parameter= rownames(sum95.sens25),
+                              Median=sum95.sens25$md, 
+                              Mean=sum95.sens25$mean,
+                              LHDI95=sum95.sens25$`95%_HPDL`, 
+                              UHDI95=sum95.sens25$`95%_HPDU`,
+                              p= sum95.sens25$`p>0`, 
+                              Rhat=sum95.sens25$Rhat
+)
+
+# Compare outputs
+coef.est.sens23
+coef.est.sens24
+coef.est.sens25
+coef.est.reduced

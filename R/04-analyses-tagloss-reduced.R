@@ -1,11 +1,10 @@
 library ('nimble')
 library('parallel')
 library('nimbleEcology')
-#load("/bsuscratch/brianrolek/gyps/data.RData")
 load("data\\data.RData")
 set.seed(5757575)
 
-run <- function(seed, datl){
+run <- function(seed, datl, constl){
   library('nimble')
   library('coda')
   library('nimbleEcology')
@@ -36,7 +35,7 @@ run <- function(seed, datl){
     # -------------------------------------------------
     # States (S):
     # 1 alive with functioning transmitter
-    # 2 presumed alive, transmitter failed or lost
+    # 2 alive, transmitter failed or lost
     # 3 dead recovery with functioning transmitter
     # 4 dead, transmitter failed or dropped
     # 5 long dead
@@ -44,8 +43,8 @@ run <- function(seed, datl){
     # Observations (O):
     # 1 presumed alive, tag works 
     # 2 presumed alive, tag failed
-    # 3 dead recovery, tag works
-    # 4 dead recovery, tag failed- NO OCCURRENCES
+    # 3 presumed dead, tag works
+    # 4 presumed dead, tag failed
     # 5 Not observed, uncertain tag status and survival
     # -------------------------------------------------
     # Priors and constraints
@@ -69,25 +68,13 @@ run <- function(seed, datl){
       beta[xxxx] ~ dnorm(0, sd=10) # covariates for tagloss
     } # xxxx
     
-    # pi[1,] just simulates values but is unused in model
-    # alpha[1:6] <- c(1,1,1,1,1,1)
-    # pi[1,1:6] ~ ddirch(alpha[1:6])
-    # pi[2,] # estimates age for unknown age subadults
-    # pi[2,1] <- 0
-    # pi[2,2:5] ~ ddirch(alpha[2:5])
-    # pi[2,6] <- 0
-    
     #### MONTHLY SURVIVAL PROBABILITY
     for (i in 1:nind){
-      # first_age[i] ~ dcat( pi[ known[i], 1:6] )
       for (t in f[i]:(ntime-1)){
         age[i,t] <- ( first_age[i] + t/12 - f[i]/12 )
         age.class[i,t] <- ifgreaterFun( age[i,t], 1, 6 ) # translate to age classes: 0 yro first-year, 1-5 yro subadult, and >=6 yro adult
         
         logit(s[i,t]) <- l.s[ age.class[i,t] ]  
-          #delta[1]*managed.cat[t] + 
-          #delta[2]*rehabbed[i] + 
-          #delta[3]*sp[i] 
         
         logit(tagfailed[i,t]) <- l.tagfail + 
           beta[1]*tag.age.sc[i,t] +
@@ -163,18 +150,12 @@ run <- function(seed, datl){
     
   } ) # nimbleCode
   
-  #fa.inits <- rep(NA, times=datl$nind)
-  #fa.inits[is.na(datl$first_age)] <- 3
-  inits <- function(){ list(z=datl$z.inits,
-                            beta = rnorm(2,0,0.5),
+  inits <- function(){ list(beta = rnorm(2,0,0.5),
                             delta = rnorm(3,0,0.5),
                             mean.s = runif(3,0,1), 
                             mean.tagfail = runif(1), 
                             mean.p.tagfail =  runif(1), 
                             mean.p.dead = runif(1)
-                            # pi = matrix(c(rdirch(1,alpha=c(1,1,1,1,1,1)), 
-                            #               NA, rdirch(1,alpha=c(1,1,1,1)), NA), nrow=2, byrow=T ),
-                            # first_age=fa.inits
                             
   )}
   
@@ -185,10 +166,10 @@ run <- function(seed, datl){
   
   nimbleOptions(showCompilerOutput= TRUE)        
   mod <- nimbleModel(code, calculate=T, 
-                     constants = datl[c(4:6, 8:length(datl))],
-                     data = datl[c(1,2,7)], 
+                     constants = datl,
+                     data = constl, 
                      inits = inits()) 
-  #buildDerivs = TRUE)
+
   cmod <- compileNimble( mod )
   conf <- configureMCMC(cmod, monitors=pars, print = TRUE)
   mc <- buildMCMC(conf, project=cmod)
@@ -196,10 +177,7 @@ run <- function(seed, datl){
   printErrors()
   
   nc <- 1; nt <- 20; ni <- 100000; nb <- 80000
-  #nc <- 1; nt <- 10; ni <- 35000; nb <- 25000
-  #nc <- 1; nt <- 25; ni <- 10000; nb <- 5000
-  #nc <- 1; nt <- 5; ni <- 200; nb <- 100
-  
+  #nc <- 1; nt <- 5; ni <- 200; nb <- 100 # test run
   
   post <- runMCMC(cmc,
                   niter = ni, 
@@ -215,6 +193,8 @@ this_cluster <- makeCluster(4)
 post <- parLapply(cl = this_cluster,
                   X = 1:4,
                   fun = run,
-                  datl=datl)
+                  datl=datl, 
+                  constl=constl)
+
 stopCluster(this_cluster)
-save(post, datl, file="outputs/gyps-12Aug2025-marginalized-reduced.RData")
+save(post, datl, file="outputs/gyps-25Sept2025-marginalized-reduced.RData")
