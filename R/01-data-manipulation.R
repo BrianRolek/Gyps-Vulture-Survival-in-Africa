@@ -61,7 +61,6 @@ dtbins <- data.frame(
 mndt <- round_date(min(ymd(dat1$DateAdded), na.rm=T), unit="months")
 mxdt <- max(ymd(dat1$`DateOfLoss-last activity`), na.rm=T)
 dtbins <- dtbins[dtbins$start >= mndt & dtbins$end <= mxdt,]
-# dtbins$nms <-  paste0(c("D", "W"), year(dtbins$end))
 dtbins$yr_int <- dtbins$start %--% dtbins$end 
 
 int_overlaps_numeric <- function (int1, int2) {
@@ -162,20 +161,6 @@ yr.factor <- as.numeric(factor(yr))
 # age after 6
 known1 <- as.numeric(!is.na(as.numeric(dat1$Age2)))
 known <- ifelse(known1==1, 1, 2)
-# z values for directly observed states
-# zmat <- ifelse(ch<=4, ch, NA)
-# first_zs <- c()
-# for (i in 1:nrow(zmat)){
-#   first_zs[i] <- zmat[i,f[i]] 
-#   zmat[i, f[i] ] <- NA # sub in NA for first capture
-# }
-# 
-# for (i in 1:nrow(zmat)){
-# if (last.val2[i]==3){
-#   zmat[i, (last2[i]+1) :ntime  ] <- 5
-# }}
-
-#lastz <- apply(zmat, 1, get.last2)
 
 # Calculate tag age
 tag.age <- array(NA, dim(ch), dimnames=dimnames(ch))
@@ -190,40 +175,98 @@ tag.age.sc[is.na(tag.age.sc) ] <- 0
 
 man.cat <- array(0, dim(ch), dimnames=dimnames(ch))
 man.cat[,31:ntime] <- 1
+# Remove individuals with <=2 occasions
+# software can't run, 4 individs
+tooshort <- c()
+for (i in 1:nrow(ch)){
+  tooshort[i] <- ((last2[i]-1)-(as.numeric(f[i])+1)) 
+}
+wtooshort <- which(tooshort<0)
+
+ch[is.na(ch)] <- 5
 
 datl <- list(
-  y=ch # observation matrix
+  y=ch[-wtooshort,], # observation matrix
+  first_age=(as.numeric(dat1$Age2)+1)[-wtooshort] # data matrix of known first ages, but NAs for unknown ages
   )
 
 constl <- list(
-  f=as.numeric(f),# time interval of first capture
-  k=last2, # last time observed prior to censured length nind. 
-  known=known, # whether age was known or not, subadults are unknown
-  first_age=as.numeric(dat1$Age2), # data matrix of known first ages, but NAs for unknown ages
+  f=as.numeric(f)[-wtooshort],# time interval of first capture
+  last=last2[-wtooshort], # last time observed prior to censured length nind. 
   period.cat=ifelse(yr.cont<0,0,1),
   year.cont=yr.cont,
-  rehabbed=ifelse(dat1$rehabbed==T, 1, 0),
-  nind= nrow(ch),
-  ntime= ncol(ch),
+  rehabbed=ifelse(dat1$rehabbed==T, 1, 0)[-wtooshort],
+  nind= nrow(datl$y),
+  ntime= ncol(datl$y),
   nyears= length(unique(yr.factor)), 
-  tag.age.sc= tag.age.sc, 
-  sp=ifelse(dat1$Species=="WBV", 0, 1)
+  tag.age.sc= tag.age.sc[-wtooshort,], 
+  sp=ifelse(dat1$Species=="WBV", 0, 1)[-wtooshort],
+  known = ifelse(is.na(as.numeric(dat1$Age2)), 2, 1)[-wtooshort],
+  y.first=first.val[-wtooshort]
 )
-
-# impute median for unknown ages  
-datl$first_age[is.na(datl$first_age)] <- median(1:6) 
-y.first <- c()
-for (i in 1:nrow(datl$y)) {
-  y.first[i] <- datl$y[i, datl$f[i]]
-}
-datl$y.first <- y.first
 
 save(datl=datl, constl, get.last=get.last2, get.first=get.first, 
      file="data\\data.RData")
 
 
 # data summaries
-table(datl$y[datl$sp==0, ]) ; sum(table(datl$y[datl$sp==0, ]))
-table(datl$y[datl$sp==1, ]) ; sum(table(datl$y[datl$sp==1, ]))
 table(datl$y) ; sum(table(datl$y))
-                    
+
+library (tidyverse)
+# Setup data for calculating number of vultures
+# and observation of each species during each period
+ly <- datl$y %>%
+  as_tibble(rownames = "id") %>% # Convert to tibble, moving rownames to a column named "Var1"
+  pivot_longer(
+    cols = starts_with("d"),     # Specify columns to pivot (all starting with "col")
+    names_to = "year_month",             # Name the new column for variable names "Var2"
+    values_to = "state"            # Name the new column for values "value"
+  )
+species <- ifelse(constl$sp==0, "W", "R")
+names(species) <- rownames(datl$y)  
+period <- ifelse(yr.cont<0,"Early","Late")
+names(period) <- colnames(datl$y) 
+ly <- merge(ly, species, by.x="id", by.y=0)
+ly <- merge(ly, period, by.x="year_month", by.y=0)
+colnames(ly)[4:5] <- c("species","period")
+# calculate ages
+age <- array(NA, dim=dim(datl$y), dimnames=dimnames(datl$y))
+for(i in 1:constl$nind){
+  age[i,constl$f[i]] <- datl$first_age[i]-1
+  for (t in (constl$f[i]+1):constl$ntime){
+    age[i,t] <- floor(( (datl$first_age[i]-1) + t/12 - f[i]/12 ))
+  }} 
+lage <- age %>%
+  as_tibble(rownames = "id") %>% # Convert to tibble, moving rownames to a column named "Var1"
+  pivot_longer(
+    cols = starts_with("d"),     # Specify columns to pivot (all starting with "col")
+    names_to = "year_month",             # Name the new column for variable names "Var2"
+    values_to = "age"            # Name the new column for values "value"
+  )
+ly <- ly[ !is.na(ly$state), ]
+ly <- merge(ly, lage, by=c("id", "year_month"))
+ly$agec <- ifelse(is.na(ly$age), "SA-Unknown",
+            ifelse(ly$age<1, "FY",
+              ifelse(ly$age>=1 & ly$age<6, "SA-Known",
+                ifelse(ly$age>=6, "A", NA  ))))
+rh <- ifelse(constl$rehabbed==1, "rehabbed", "no rehab")
+names(rh) <- rownames(datl$y)
+ly <- merge(ly, rh, by.x="id", by.y=0)
+colnames(ly)[8] <- "rehabbed"
+# these sum to <1400 because unknown ages
+# number of monthly observations
+
+# number of individuals
+li <- ly[!duplicated(ly$id),]
+
+table(ly$agec)
+table(ly$period)
+table(ly$species, ly$period, ly$agec)
+table(ly$species, ly$period, is.na(ly$age))
+table(ly$species, ly$period, ly$rehabbed)
+
+table(li$period)
+table(li$species, li$period, li$agec)
+table(li$species, li$period, is.na(li$age))
+table(li$species, li$period, li$rehabbed)
+

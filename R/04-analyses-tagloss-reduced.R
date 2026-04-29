@@ -2,11 +2,11 @@ library ('nimble')
 library('parallel')
 library('nimbleEcology')
 load("data\\data.RData")
+#load("/bsuscratch/brianrolek/gyps/data.RData")
 set.seed(5757575)
 
 run <- function(seed, datl, constl){
   library('nimble')
-  library('coda')
   library('nimbleEcology')
   
   ifgreaterFun <- nimbleFunction(
@@ -48,10 +48,6 @@ run <- function(seed, datl, constl){
     # 5 Not observed, uncertain tag status and survival
     # -------------------------------------------------
     # Priors and constraints
-    for (xx in 1:3){
-      mean.s[xx] ~ dbeta(1, 1)   # uninformative prior for all MONTHLY survival probabilities
-      l.s[xx] <- logit(mean.s[xx])
-    }# xx logit transformed survival intercept
     mean.p.dead ~ dbeta(1, 1)   # uninformative prior for all MONTHLY survival probabilities
     l.p.dead <- logit(mean.p.dead)    # logit transformed survival intercept
     
@@ -62,19 +58,37 @@ run <- function(seed, datl, constl){
     l.p.tagfail <- logit(mean.p.tagfail)    # logit transformed survival intercept
     
     for (x in 1:3){
-      delta[x] ~ dnorm(0, sd=10) # covariates for survival        
+      mean.s[x] ~ dbeta(1, 1)   # uninformative prior for all MONTHLY survival probabilities
+      l.s[x] <- logit(mean.s[x])
+    }# xx logit transformed survival intercept
+    for (xx in 1:3){
+      delta[xx] ~ dnorm(0, sd=10) # covariates for survival        
     } # x
-    for (xxxx in 1:2){
-      beta[xxxx] ~ dnorm(0, sd=10) # covariates for tagloss
+    for (xxx in 1:2){
+      beta[xxx] ~ dnorm(0, sd=10) # covariates for tagloss
     } # xxxx
+    # ages 0,1,2,3,4,5,6
+    alpha[1:7] <- c(1,1,1,1,1,1,1)
+    pi[1,1:7] ~ ddirch(alpha[1:7])
+    pi[2,1] <- 0
+    pi[2,2:6] ~ ddirch(alpha[2:6])
+    pi[2,7] <- 0
     
     #### MONTHLY SURVIVAL PROBABILITY
     for (i in 1:nind){
+      first_age[i] ~ dcat(pi[known[i],1:7])
       for (t in f[i]:(ntime-1)){
-        age[i,t] <- ( first_age[i] + t/12 - f[i]/12 )
-        age.class[i,t] <- ifgreaterFun( age[i,t], 1, 6 ) # translate to age classes: 0 yro first-year, 1-5 yro subadult, and >=6 yro adult
+        # translate to age classes: 
+        # 0 year old = 1, 
+        # 1-5 year old subadult = 2-6
+        # and >=6 year old adult = 7
+        age[i,t] <- ( (first_age[i]-1) + t/12 - f[i]/12 )
+        age.class[i,t] <- ifgreaterFun( age[i,t], 1, 6 ) 
         
-        logit(s[i,t]) <- l.s[ age.class[i,t] ]  
+        logit(s[i,t]) <- l.s[ age.class[i,t] ] #+ 
+          # delta[1]*c(-1, 1)[ period.cat[t] + 1 ] + 
+          # delta[2]*c(-1, 1)[ rehabbed[i] + 1 ] + 
+          # delta[3]*c(-1, 1)[ sp[i] + 1 ] 
         
         logit(tagfailed[i,t]) <- l.tagfail + 
           beta[1]*tag.age.sc[i,t] +
@@ -140,11 +154,11 @@ run <- function(seed, datl, constl){
     
     # Likelihood 
     for (i in 1:nind){
-      y[i, (f[i] + 1):k[i]] ~ 
+      y[i, (f[i] + 1):last[i]] ~ 
         dDHMMo(init = ps[i, y.first[i], 1:4, f[i]], 
-               probObs = po[i, 1:4, 1:5, f[i]:(k[i] - 1)], 
-               probTrans = ps[i, 1:4, 1:4, (f[i] + 1):(k[i] - 1)], 
-               len = k[i] - f[i], 
+               probObs = po[i, 1:4, 1:5, f[i]:(last[i] - 1)], 
+               probTrans = ps[i, 1:4, 1:4, (f[i] + 1):(last[i] - 1)], 
+               len = last[i] - f[i], 
                checkRowSums = 0)
     } #i
     
@@ -154,9 +168,10 @@ run <- function(seed, datl, constl){
                             delta = rnorm(3,0,0.5),
                             mean.s = runif(3,0,1), 
                             mean.tagfail = runif(1), 
-                            mean.p.tagfail =  runif(1), 
-                            mean.p.dead = runif(1)
-                            
+                            mean.p.tagfail = runif(1), 
+                            mean.p.dead = runif(1),
+                            alpha = rep(1/7, 7),
+                            first_age = ifelse(is.na(datl$first_age), 3, NA)
   )}
   
   pars <- c(  "beta", 
@@ -164,37 +179,42 @@ run <- function(seed, datl, constl){
               "mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead",
               "l.s", "l.tagfail", "l.p.tagfail", "l.p.dead") 
   
-  nimbleOptions(showCompilerOutput= TRUE)        
+  nimbleOptions(showCompilerOutput= TRUE)
+  #options(nimbleUseAltDir = TRUE)
   mod <- nimbleModel(code, calculate=T, 
-                     constants = datl,
-                     data = constl, 
-                     inits = inits()) 
-
+                     constants = constl,
+                     data = datl, 
+                     inits = inits(),
+                     buildDerivs = FALSE) 
+  
   cmod <- compileNimble( mod )
   conf <- configureMCMC(cmod, monitors=pars, print = TRUE)
   mc <- buildMCMC(conf, project=cmod)
+  # conf <- configureHMC(cmod, monitors=pars, print = TRUE)
+  # mc <- buildHMC(conf, project=cmod)
   cmc <- compileNimble(mc, project=cmod, showCompilerOutput = TRUE)
   printErrors()
   
-  nc <- 1; nt <- 20; ni <- 100000; nb <- 80000
-  #nc <- 1; nt <- 5; ni <- 200; nb <- 100 # test run
+  nc <- 1; nt <- 5; ni <- 100000; nb <- 80000
+  #nc <- 2; nt <- 5; ni <- 200; nb <- 100 # test run
   
   post <- runMCMC(cmc,
                   niter = ni, 
                   nburnin = nb,
                   nchains = 1,
                   thin = nt,
-                  samplesAsCodaMCMC = T)
+                  samplesAsCodaMCMC = T,
+                  setSeed = seed)
   
   return(post)
 } # run model function end
 # 
+#post <- run( datl, constl)
 this_cluster <- makeCluster(4)
 post <- parLapply(cl = this_cluster,
                   X = 1:4,
                   fun = run,
-                  datl=datl, 
-                  constl=constl)
-
+                  datl = datl,
+                  constl = constl)
 stopCluster(this_cluster)
-save(post, datl, file="outputs/gyps-25Sept2025-marginalized-reduced.RData")
+save(post, datl, file="outputs/gyps-28Apr2026-marginalized-reduced.RData")

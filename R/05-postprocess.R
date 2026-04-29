@@ -1,4 +1,4 @@
-library(MCMCvis)
+library (MCMCvis)
 library (coda)
 library (ggplot2)
 library (reshape2)
@@ -16,28 +16,23 @@ pars <- c(  "delta", "beta",#"gamma", "eta",
 write.csv(file= "C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\GitHub\\Gyps Vulture Survival in Africa\\docs\\individIDs_for_Map.csv",
           rownames(datl$y) )
 # load output from global model
-load("outputs\\gyps-11Aug2025-marginalized.RData")
+load("outputs\\gyps-28Apr2026-marginalized-global.RData")
 post.global <- post
 p <- MCMCpstr(post, pars, type="chains")
 p2 <- mcmc.list(post)
 # load output from reduced model
-load("outputs\\gyps-12Aug2025-marginalized-reduced.RData")
+load("outputs\\gyps-28Apr2026-marginalized-reduced.RData")
 post.reduced <- post
 p3 <- MCMCpstr(post, pars[-1], type="chains")
 # Calculate age sample sizes
-first <- last <- c()
+first <- constl$f 
+last <- constl$k
 ages <- array(NA, dim=dim(datl$y))
-for (i in 1:datl$nind){
-  y.min <- which.min( datl$y[i,] )
-  y.max <- which.max( datl$y[i,] )
-  z.min <- which.min( datl$z[i,] )
-  z.max <- which.max( datl$z[i,] )
-  first[i] <- min(c(y.min, z.min))
-  last[i] <- min(c(y.max, z.max))
-  for (t in 1:datl$ntime){
-    
+for (i in 1:constl$nind){
+  for (t in 1:constl$ntime){
 ages[i, t] <- ( datl$first_age[i] + t/12 - datl$f[i]/12 )  
 }}
+
 ragged.melt <- function(x, first, last){
   val.list <- list()
   for (i in 1:nrow(x)){
@@ -46,10 +41,33 @@ ragged.melt <- function(x, first, last){
   all.vals <- do.call(c, val.list)
   return( all.vals )
 } # function end
+
 age.tab <- table(ragged.melt(floor(ages), first, last))
 age.tab[1] # first year bird months
-sum(age.tab[2:6]) # subadult bird months
-sum(age.tab[7:length(age.tab)]) # adult bird months
+sum(age.tab[2:3]) # subadult bird months
+sum(age.tab[4:length(age.tab)]) # adult bird months
+
+period.mat <- rehab.mat <- sp <- known <- array(NA, dim=dim(datl$y))
+for (i in 1:constl$nind){
+period.mat[i,] <- constl$period.cat
+}
+for (t in 1:constl$ntime){
+rehab.mat[,t] <- constl$rehabbed
+sp[,t] <- constl$sp
+known[,t] <- constl$known
+}
+
+df.bmonths <- data.frame(
+           age=ragged.melt(floor(ages), first, last),
+           states=ragged.melt(datl$y, first, last),
+           tag.age=ragged.melt(constl$tag.age.sc, first, last), 
+           period=ragged.melt(period.mat, first, last),
+           rehabbed=ragged.melt(rehab.mat, first, last),
+           sp=ragged.melt(sp, first, last),
+           known=ragged.melt(known, first, last)
+           )
+samps <- with (df.bmonths, table(states, sp, period))
+apply(samps, 1, sum)
 
 # Model diagnostics
 # Check for convergence
@@ -70,7 +88,7 @@ MCMCtrace(post.reduced, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.de
 # Summary stats
 # Sample Sizes
 ly <- melt(datl$y)
-sp.df <- data.frame(Var1=rownames(datl$y), species=datl$sp)
+sp.df <- data.frame(Var1=rownames(datl$y), species=constl$sp)
 ly2 <- merge(ly, sp.df, by="Var1")
 ly2 <- ly2[!is.na(ly2$value),]
 colSums(table(ly2$value, ly2$species))
@@ -232,7 +250,7 @@ pred.man <- array(NA, dim=c(3, 2, ni),
 for (a in 1:3){
 for (m in 1:2){
   pred.man[a,m,] <- p$l.s[a,] + 
-                    p$delta[1,]*c(0,1)[m]
+                    p$delta[1,]*c(-1,1)[m]
 }}
 lp.man <- melt(pred.man)
 colnames(lp.man)[1:3] <- c("Ageclass", "Period", "iter" )
@@ -302,7 +320,7 @@ write.csv(file= "docs\\Survival_age_period.csv",
 #***************
 yr <- seq(2009,2025, by=0.1)
 yr.sc <- (yr-2016)/7
-ni <- 4000
+ni <- ncol(p3$beta)
 pred.tf.yr <- array(NA, dim=c(length(yr.sc), ni), dimnames=list(yr, 1:ni) )
 for (i in 1:length(yr.sc)){
   pred.tf.yr[i,] <- p3$l.tagfail[1,] + p3$beta[2,]*yr.sc[i] #+ p$beta[4,]*yr.sc[i]^2
@@ -371,9 +389,9 @@ df2 <- data.frame(md =1-((1-md)^12),
 #*Compare mresults models with 
 #*those having changed data
 #* state two to three
-load("outputs/gyps-15Aug2025-sensitivitytest.RData")
-post.sens23 <- post1
-p23 <- MCMCpstr(post1, pars, type="chains")
+load("outputs/gyps-28Apr2026-sensitivitytest.RData")
+post.sens23 <- post1[-4] # drop chain 4 because poor convergence
+p23 <- MCMCpstr(post1[-4], pars, type="chains")
 
 iters <- ncol(p23$delta)
 MCMCtrace(post.sens23, "beta", pdf=F, Rhat=T, 
