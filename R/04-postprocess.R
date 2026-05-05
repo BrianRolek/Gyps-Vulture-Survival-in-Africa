@@ -5,6 +5,7 @@ library (reshape2)
 library (tidybayes)
 library (bayestestR)
 library (ggpubr)
+library (scales)
 options(scipen=999)
 load("data//data.RData")
 pars <- c(  "delta", "beta",#"gamma", "eta",
@@ -17,13 +18,18 @@ write.csv(file= "C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Document
           rownames(datl$y) )
 # load output from global model
 load("outputs\\gyps-28Apr2026-marginalized-global.RData")
-post.global <- post
-p <- MCMCpstr(post, pars, type="chains")
-p2 <- mcmc.list(post)
+postl.global <- lapply(post, function(x){ x$samples })
+post.global <- do.call(rbind, postl.global)
+#post.global <- post
+p1 <- MCMCpstr(postl.global, pars, type="chains")
+p2 <- mcmc.list(postl.global)
 # load output from reduced model
 load("outputs\\gyps-28Apr2026-marginalized-reduced.RData")
-post.reduced <- post
-p3 <- MCMCpstr(post, pars[-1], type="chains")
+postl.reduced <- lapply(post, function(x){ x$samples })
+post.reduced <- do.call(rbind, postl.reduced)
+#post.reduced <- post
+p3 <- MCMCpstr(postl.reduced, pars[-1], type="chains")
+p4 <- mcmc.list(postl.reduced)
 # Calculate age sample sizes
 first <- constl$f 
 last <- constl$k
@@ -71,23 +77,24 @@ apply(samps, 1, sum)
 
 # Model diagnostics
 # Check for convergence
-iters <- ncol(p$delta)
-MCMCtrace(post.global, "delta", pdf=F, Rhat=T, 
+iters <- ncol(p1$delta)
+MCMCtrace(postl.global, "delta", pdf=F, Rhat=T, 
           priors=rnorm(iters, 0, 10), post_zm = FALSE)
-MCMCtrace(post.global, "beta", pdf=F, Rhat=T, 
+MCMCtrace(postl.global, "beta", pdf=F, Rhat=T, 
           priors=rnorm(iters, 0, 10), post_zm = FALSE)       
-MCMCtrace(post.global, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead"), pdf=F, Rhat=T, 
+MCMCtrace(postl.global, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead"), pdf=F, Rhat=T, 
           priors=rbeta(iters, 1, 1), post_zm = FALSE)  
 
 iters <- ncol(p3$beta)
-MCMCtrace(post.reduced, "beta", pdf=F, Rhat=T, 
+MCMCtrace(postl.reduced, "beta", pdf=F, Rhat=T, 
           priors=rnorm(iters, 0, 10), post_zm = FALSE)       
-MCMCtrace(post.reduced, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead"), pdf=F, Rhat=T, 
+MCMCtrace(postl.reduced, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead"), pdf=F, Rhat=T, 
           priors=rbeta(iters, 1, 1), post_zm = FALSE) 
 # Table 1
 # Summary stats
 # Sample Sizes
-ly <- melt(datl$y)
+ly <- as.data.frame.table(datl$y, responseName = "value")
+#ly <- melt(datl$y)
 sp.df <- data.frame(Var1=rownames(datl$y), species=constl$sp)
 ly2 <- merge(ly, sp.df, by="Var1")
 ly2 <- ly2[!is.na(ly2$value),]
@@ -100,7 +107,7 @@ rowSums(t(table(ly2$value, ly2$species)))
 # Table 2 
 # Estimates
 # Survival by management period
-sum95.global <- MCMCsummary(post.global, pars[-c(7:10)], HPD=TRUE, digits=2, 
+sum95.global <- MCMCsummary(postl.global, pars[-c(7:10)], HPD=TRUE, digits=2, 
             hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
 
 coef.est.global <- data.frame(Parameter= rownames(sum95.global),
@@ -113,7 +120,7 @@ coef.est.global <- data.frame(Parameter= rownames(sum95.global),
                        )
 coef.est.global <- cbind(Model="Global", coef.est.global)
 
-sum95.reduced <- MCMCsummary(post.reduced, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
+sum95.reduced <- MCMCsummary(postl.reduced, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
                      hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
 coef.est.reduced <- data.frame(Parameter= rownames(sum95.reduced),
                        Median=sum95.reduced$md, 
@@ -146,42 +153,47 @@ MCMCplot(p2, params=c("mean.s", "mean.tagfail",
 ta <- seq(0,5.3, by=0.1)
 ta.sc <- (ta-5.436775)/3.997963
 ni <- ncol(p3$beta)
-pred.ta <- array(NA, dim=c(length(ta.sc), ni), dimnames=list(ta, 1:ni) )
+yrs <- c(-0.73, 0.46) # set to 2011 for early period and 2020 for late
+pred.ta <- array(NA, dim=c(length(ta.sc),2,ni), 
+                 dimnames=list(tagage=ta, period=c("Early", "Late"), iter=1:ni) )
 for (i in 1:length(ta.sc)){
-pred.ta[i,] <- p3$l.tagfail[1,] + p3$beta[1,]*ta.sc[i] #+ p$beta[2,]*ta.sc[i]^2
-}
-lp.ta <- melt(pred.ta)
-colnames(lp.ta)[1:2] <- c("tagage", "iter" )
+  for (j in 1:2){
+pred.ta[i,j,] <- p3$l.tagfail[1,] + p3$beta[1,]*ta.sc[i] + p3$beta[2,]*yrs[j]
+}}
+lp.ta <- as.data.frame.table(pred.ta, responseName = "value") 
+lp.ta$tagage <- as.numeric(as.character(lp.ta$tagage))
 lp.ta$pred <- plogis(lp.ta$value)
-md <- plogis(apply(pred.ta, 1, median, na.rm=T))
-lhdi95 <- plogis(apply(pred.ta, 1, HDInterval::hdi, na.rm=T)[1,])
-uhdi95 <- plogis(apply(pred.ta, 1, HDInterval::hdi, na.rm=T)[2,])
-lhdi85 <- plogis(apply(pred.ta, 1, HDInterval::hdi, na.rm=T, credMass=0.85)[1,])
-uhdi85 <- plogis(apply(pred.ta, 1, HDInterval::hdi, na.rm=T, credMass=0.85)[2,])
-df <- data.frame(md=md,
-                 lhdi95=lhdi95, uhdi95=uhdi95,
-                 lhdi85=lhdi85, uhdi85=uhdi85,
-                 ta=ta)
+md <- plogis(apply(pred.ta, c(1,2), median, na.rm=T))
+lhdi95 <- plogis(apply(pred.ta, c(1,2), HDInterval::hdi, na.rm=T)[1,,])
+uhdi95 <- plogis(apply(pred.ta, c(1,2), HDInterval::hdi, na.rm=T)[2,,])
+lhdi85 <- plogis(apply(pred.ta, c(1,2), HDInterval::hdi, na.rm=T, credMass=0.85)[1,,])
+uhdi85 <- plogis(apply(pred.ta, c(1,2), HDInterval::hdi, na.rm=T, credMass=0.85)[2,,])
+df <- data.frame(md=c(md[,1], md[,2]),
+                 lhdi95=c(lhdi95[,1],lhdi95[,2]), 
+                 uhdi95=c(uhdi95[,1],uhdi95[,2]),
+                 lhdi85=c(lhdi85[,1],lhdi85[,2]), 
+                 uhdi85=c(uhdi85[,1], uhdi85[,2]),
+                 ta=c(ta, ta),
+                 period=c(rep("Early", length(ta)), rep("Late", length(ta))) )
 
 pyta <- ggplot() + theme_minimal() +
   geom_line(data=lp.ta, aes(x=tagage, y=1-((1-pred)^12), group=iter),
             color="gray40", linewidth=0.5, alpha=0.05) +
-  geom_line(data=df, aes(x=ta, y=1-((1-md)^12)), linewidth=2) +
-  geom_line(data=df, aes(x=ta, y=1-((1-lhdi85)^12)), linewidth=2, linetype="dashed") +
-  geom_line(data=df, aes(x=ta, y=1-((1-uhdi85)^12)), linewidth=2, linetype="dashed") +
-  geom_line(data=df, aes(x=ta, y=1-((1-lhdi95)^12)), linewidth=1, linetype="dashed") +
-  geom_line(data=df, aes(x=ta, y=1-((1-uhdi95)^12)), linewidth=1, linetype="dashed") +
-  ylab("Transmitter failure (yearly probability)") + xlab("Transmitter age (years)")
+  scale_x_continuous(breaks=c(0,2,4,6)) +
+  geom_line(data=df, aes(x=ta, y=1-((1-md)^12)), linewidth=1) +
+  geom_line(data=df, aes(x=ta, y=1-((1-lhdi95)^12)), linewidth=0.5, linetype="dashed") +
+  geom_line(data=df, aes(x=ta, y=1-((1-uhdi95)^12)), linewidth=0.5, linetype="dashed") +
+  ylab("Transmitter failure (yearly probability)") + xlab("Transmitter age (years)") +
+  facet_wrap("period")
 
 pmta <- ggplot() + theme_minimal() +
   geom_line(data=lp.ta, aes(x=tagage, y=pred, group=iter),
             color="gray40", linewidth=0.5, alpha=0.05) +
-  geom_line(data=df, aes(x=ta, y=md), linewidth=2) +
-  geom_line(data=df, aes(x=ta, y=lhdi85), linewidth=2, linetype="dashed") +
-  geom_line(data=df, aes(x=ta, y=uhdi85), linewidth=2, linetype="dashed") +
-  geom_line(data=df, aes(x=ta, y=lhdi95), linewidth=1, linetype="dashed") +
-  geom_line(data=df, aes(x=ta, y=uhdi95), linewidth=1, linetype="dashed") +
-  ylab("Transmitter failure (monthly probability)") + xlab("Transmitter age (years)")
+  geom_line(data=df, aes(x=ta, y=md), linewidth=1) +
+  geom_line(data=df, aes(x=ta, y=lhdi95), linewidth=0.5, linetype="dashed") +
+  geom_line(data=df, aes(x=ta, y=uhdi95), linewidth=0.5, linetype="dashed") +
+  ylab("Transmitter failure (monthly probability)") + xlab("Transmitter age (years)") +
+  facet_wrap("period")
 
 ggsave("figs\\transmitter age and failure.tiff",
        pyta, device="tiff",
@@ -191,16 +203,21 @@ ggsave("figs\\transmitter age and failure-byMonth.tiff",
        pmta, device="tiff",
        width=6.5, height=4, units="in", dpi=300)
 
-df2 <- data.frame(md =1-((1-md)^12),
-                  lhdi95= 1-((1-lhdi95)^12),
-                  uhdi95=1-((1-uhdi95)^12)
+df2 <- data.frame(early.md = (1-((1-md)^12))[,1],
+                  early.lhdi95= (1-((1-lhdi95)^12))[,1],
+                  early.uhdi95= (1-((1-uhdi95)^12))[,1],
+                  late.md = (1-((1-md)^12))[,2],
+                  late.lhdi95= (1-((1-lhdi95)^12))[,2],
+                  late.uhdi95= (1-((1-uhdi95)^12))[,2]
 )
+df2 |> round(2)
 
 #****************
 #* plot survival by age class
 #****************
 # from reduced model, p3
-lss <- melt(p3$mean.s)
+lss <- as.data.frame.table(p3$mean.s, responseName = "value")
+#lss <- melt(p3$mean.s)
 #lss$Ageclass <- ifelse(lss$Var1 == "mean.s[1]", "First year",
 #                       ifelse(lss$Var1 == "mean.s[2]"), "Subadult", "Adult")
 
@@ -222,27 +239,26 @@ ps3 <- lss |>
       ggtitle("(B) Combined") 
 
 # Calculate yearly survival for results
-lss$yr.s<- lss$value^12
+lss$yr.s <- lss$value^12
 tapply(lss$yr.s, lss$Var1, median)
 tapply(lss$yr.s, lss$Var1, mean)
 tapply(lss$yr.s, lss$Var1, HDInterval::hdi, credMass=0.95)
 tapply(lss$yr.s, lss$Var1, HDInterval::hdi, credMass=0.85)
-
 # ggsave("figs\\survival-ageclass.tiff",
 #        ps3, device="jpeg", 
 #        width=6.5, height=4, units="in", dpi=300)
 
 # Calculate PDs for age classes
 s.diffs <- list()
-s.diffs[[1]] <- p$mean.s[3,] - p$mean.s[2,]
-s.diffs[[2]] <- p$mean.s[3,] - p$mean.s[1,]
-s.diffs[[3]] <- p$mean.s[2,] - p$mean.s[1,]
+s.diffs[[1]] <- p3$mean.s[3,] - p3$mean.s[2,]
+s.diffs[[2]] <- p3$mean.s[3,] - p3$mean.s[1,]
+s.diffs[[3]] <- p3$mean.s[2,] - p3$mean.s[1,]
 lapply(s.diffs, pd)
 apply(p3$mean.s^12, 1, median)
 apply(p3$mean.s^12, 1, HDInterval::hdi)
 
 #****************
-#* plot survival in response to management/time
+#* plot survival in response to period
 #****************
 ni <- ncol(p$delta)
 pred.man <- array(NA, dim=c(3, 2, ni), 
@@ -252,7 +268,8 @@ for (m in 1:2){
   pred.man[a,m,] <- p$l.s[a,] + 
                     p$delta[1,]*c(-1,1)[m]
 }}
-lp.man <- melt(pred.man)
+lp.man <- as.data.frame.table(pred.man, responseName = "value")
+#lp.man <- melt(pred.man)
 colnames(lp.man)[1:3] <- c("Ageclass", "Period", "iter" )
 lp.man$pred <- plogis(lp.man$value)
 
@@ -269,10 +286,6 @@ p4 <- ggplot(data=lp.man, aes(x=pred^12, y=Period)) + theme_minimal() +
   ylab("Period") + xlab("Survival (yearly probability)") +
   ggtitle("(A) Period")
 
-# ggsave("figs\\survival-ageclass-management.tiff",
-#        p4, device="jpeg", 
-#        width=6.5, height=4, units="in", dpi=300)
-
 all_p <- ggarrange(p4, ps3, nrow=2)
 ggsave("figs\\survival-ageclass-period-combined.tiff",
        all_p, device="jpeg", 
@@ -288,12 +301,12 @@ uhdi95 <- plogis(apply(pred.man, c(1,2), HDInterval::hdi, na.rm=T)[2,,])^12
 lhdi85 <- plogis(apply(pred.man, c(1,2), HDInterval::hdi, na.rm=T, credMass=0.85)[1,,])^12
 uhdi85 <- plogis(apply(pred.man, c(1,2), HDInterval::hdi, na.rm=T, credMass=0.85)[2,,])^12
 
-df <- data.frame(melt(md), 
-                 Mean= melt(mn)[,3],
-                 lhdi85=melt(lhdi85)[,3] |> round(2), 
-                 uhdi85=melt(uhdi85)[,3] |> round(2),
-                 lhdi95=melt(lhdi95)[,3] |> round(2), 
-                 uhdi95=melt(uhdi95)[,3] |> round(2))
+df <- data.frame(as.data.frame.table(md, responseName = "value"), 
+                 Mean= as.data.frame.table(mn, responseName = "value")[,3],
+                 lhdi85=as.data.frame.table(lhdi85, responseName = "value")[,3] |> round(2), 
+                 uhdi85=as.data.frame.table(uhdi85, responseName = "value")[,3] |> round(2),
+                 lhdi95=as.data.frame.table(lhdi95, responseName = "value")[,3] |> round(2), 
+                 uhdi95=as.data.frame.table(uhdi95, responseName = "value")[,3] |> round(2))
 df <- df[order(df$Var1, df$Var2),]
 colnames(df)[1:3] <- c("Age.class", "Period", "Median")
 df$Median <- round(df$Median, 2)
@@ -314,19 +327,19 @@ df3 <- df3[order(df3$Age.class, df3$Period), ]
 write.csv(file= "docs\\Survival_age_period.csv",
           df3  )
 
-
 #***************
 #* Plot effect from year of study on tag failure
 #***************
 yr <- seq(2009,2025, by=0.1)
 yr.sc <- (yr-2016)/7
 ni <- ncol(p3$beta)
-pred.tf.yr <- array(NA, dim=c(length(yr.sc), ni), dimnames=list(yr, 1:ni) )
+pred.tf.yr <- array(NA, dim=c(length(yr.sc), ni), 
+                    dimnames=list(year=yr, iter=1:ni) )
 for (i in 1:length(yr.sc)){
-  pred.tf.yr[i,] <- p3$l.tagfail[1,] + p3$beta[2,]*yr.sc[i] #+ p$beta[4,]*yr.sc[i]^2
+  pred.tf.yr[i,] <- p3$l.tagfail[1,] + p3$beta[1,]*-1.355 + p3$beta[2,]*yr.sc[i] 
 }
-lp.tf.yr <- melt(pred.tf.yr)
-colnames(lp.tf.yr)[1:2] <- c("year", "iter" )
+lp.tf.yr <- as.data.frame.table(pred.tf.yr, responseName = "value") 
+lp.tf.yr$year <- as.numeric(as.character(lp.tf.yr$year))
 lp.tf.yr$pred <- plogis(lp.tf.yr$value)
 lp.tf.yr <- lp.tf.yr[ (lp.tf.yr$year>=2009 & lp.tf.yr$year<=2011) |
             (lp.tf.yr$year>=2017 & lp.tf.yr$year<=2024),  ]
@@ -351,23 +364,21 @@ df$Period <- factor(ifelse(df$yr<=2011, "Early", "Late"),
 pyty <- ggplot() + theme_minimal() +
   geom_line(data=lp.tf.yr, aes(x=year, y=1-((1-pred)^12), group=iter),
             color="gray40", linewidth=0.5, alpha=0.05) +
-  geom_line(data=df, aes(x=yr, y=1-((1-md)^12)), linewidth=2) +
-  geom_line(data=df, aes(x=yr, y=1-((1-lhdi85)^12)), linewidth=2, linetype="dashed") +
-  geom_line(data=df, aes(x=yr, y=1-((1-uhdi85)^12)), linewidth=2, linetype="dashed") +
-  geom_line(data=df, aes(x=yr, y=1-((1-lhdi95)^12)), linewidth=1, linetype="dashed") +
-  geom_line(data=df, aes(x=yr, y=1-((1-uhdi95)^12)), linewidth=1, linetype="dashed") +
+  geom_line(data=df, aes(x=yr, y=1-((1-md)^12)), linewidth=1) +
+  geom_line(data=df, aes(x=yr, y=1-((1-lhdi95)^12)), linewidth=0.5, linetype="dashed") +
+  geom_line(data=df, aes(x=yr, y=1-((1-uhdi95)^12)), linewidth=0.5, linetype="dashed") +
   ylab("Transmitter failure (yearly probability)") + xlab("Year of study") +
+  scale_x_continuous(breaks=c(2009:2011, 2018, 2020, 2022, 2024)) +
   facet_wrap("Period", scales="free_x")
 
 pmty <- ggplot() + theme_minimal() +
   geom_line(data=lp.tf.yr, aes(x=year, y=pred, group=iter),
             color="gray40", linewidth=0.5, alpha=0.05) +
-  geom_line(data=df, aes(x=yr, y=md), linewidth=2) +
-  geom_line(data=df, aes(x=yr, y=lhdi85), linewidth=2, linetype="dashed") +
-  geom_line(data=df, aes(x=yr, y=uhdi85), linewidth=2, linetype="dashed") +
-  geom_line(data=df, aes(x=yr, y=lhdi95), linewidth=1, linetype="dashed") +
-  geom_line(data=df, aes(x=yr, y=uhdi95), linewidth=1, linetype="dashed") +
+  geom_line(data=df, aes(x=yr, y=md), linewidth=1) +
+  geom_line(data=df, aes(x=yr, y=lhdi95), linewidth=0.5, linetype="dashed") +
+  geom_line(data=df, aes(x=yr, y=uhdi95), linewidth=0.5, linetype="dashed") +
   ylab("Transmitter failure (monthly probability)") + xlab("Year of study") +
+  scale_x_continuous(breaks=c(2009:2011, 2018, 2020, 2022, 2024)) +
   facet_wrap("Period", scales="free_x")
 
 ggsave("figs\\tagfailure-year.tiff",
@@ -401,7 +412,8 @@ MCMCtrace(post.sens23, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dea
 
 sum95.sens23 <- MCMCsummary(post.sens23, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
                             hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
-coef.est.sens23 <- data.frame(Parameter= rownames(sum95.sens23),
+coef.est.sens23 <- data.frame(Model="State 2 to 3",
+                              Parameter= rownames(sum95.sens23),
                               Median=sum95.sens23$md, 
                               Mean=sum95.sens23$mean,
                               LHDI95=sum95.sens23$`95%_HPDL`, 
@@ -421,7 +433,8 @@ MCMCtrace(post.sens24, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dea
 
 sum95.sens24 <- MCMCsummary(post.sens24, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
                              hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
-coef.est.sens24 <- data.frame(Parameter= rownames(sum95.sens24),
+coef.est.sens24 <- data.frame( Model= "State 2 to 4",
+                               Parameter= rownames(sum95.sens24),
                                Median=sum95.sens24$md, 
                                Mean=sum95.sens24$mean,
                                LHDI95=sum95.sens24$`95%_HPDL`, 
@@ -441,7 +454,8 @@ MCMCtrace(post.sens25, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dea
 
 sum95.sens25 <- MCMCsummary(post.sens25, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
                             hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
-coef.est.sens25 <- data.frame(Parameter= rownames(sum95.sens25),
+coef.est.sens25 <- data.frame(Model= "State 2 to 5",
+                              Parameter= rownames(sum95.sens25),
                               Median=sum95.sens25$md, 
                               Mean=sum95.sens25$mean,
                               LHDI95=sum95.sens25$`95%_HPDL`, 
@@ -451,7 +465,9 @@ coef.est.sens25 <- data.frame(Parameter= rownames(sum95.sens25),
 )
 
 # Compare outputs
-coef.est.sens23
-coef.est.sens24
-coef.est.sens25
-coef.est.reduced
+df.compare <- rbind(coef.est.sens23[3:5,1:6],
+                    coef.est.sens24[3:5,1:6],
+                    coef.est.sens25[3:5,1:6],
+                    coef.est.reduced[3:5,1:6])
+write.csv(file= "C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\GitHub\\Gyps Vulture Survival in Africa\\docs\\sensitivity-table.csv", 
+          df.compare)

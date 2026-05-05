@@ -2,7 +2,6 @@ library ('nimble')
 library('parallel')
 library('nimbleEcology')
 load("data\\data.RData")
-#load("/bsuscratch/brianrolek/gyps/data.RData")
 set.seed(5757575)
 
 #************************
@@ -11,27 +10,6 @@ set.seed(5757575)
 #************************
 # model code
 code <- nimbleCode({ 
-  # -------------------------------------------------
-  # Parameters:
-  # s: monthly survival probability intercept
-  # tagfail: probability that tag will fail
-  # p.dead: probability of dead recovery
-  # p.tagfail: probability of observing a tag failure
-  # -------------------------------------------------
-  # States (S):
-  # 1 alive with functioning transmitter
-  # 2 alive, transmitter failed or lost
-  # 3 dead recovery with functioning transmitter
-  # 4 dead, transmitter failed or dropped
-  # 5 long dead
-  
-  # Observations (O):
-  # 1 presumed alive, tag works 
-  # 2 presumed alive, tag failed
-  # 3 presumed dead, tag works
-  # 4 presumed dead, tag failed
-  # 5 Not observed, uncertain tag status and survival
-  # -------------------------------------------------
   # Priors and constraints
   mean.p.dead ~ dbeta(1, 1)   # uninformative prior for all MONTHLY survival probabilities
   l.p.dead <- logit(mean.p.dead)    # logit transformed survival intercept
@@ -154,22 +132,7 @@ run <- function(seed, datl, constl, code){
   library('nimble')
   library('coda')
   library('nimbleEcology')
-  
-  ifgreaterFun <- nimbleFunction(
-    run = function(x = integer(0), 
-                   cond1 = integer(0), cond2 = integer(0) # specify subadult stage here
-    ){
-      if(x < cond1){ ans <- 1}
-      if(x >= cond1 & x < cond2){ 
-        ans <- 2 
-      } 
-      if (x >= cond2){
-        ans <- 3
-      }
-      return(ans)
-      returnType(integer(0))
-    })
-  assign('ifgreaterFun', ifgreaterFun, envir = .GlobalEnv)
+  source("R/ifgreaterFun.R")
   
   inits <- function(){ list(beta = rnorm(2,0,0.5),
                             delta = rnorm(3,0,0.5),

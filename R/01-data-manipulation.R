@@ -154,7 +154,7 @@ df <- df[df$species %in% c("WBV", "RUVU"),]
 table(df$managed)
 
 yr <- as.numeric(substr(colnames(ch), 2, 5))
-yr.cont <- (yr-2016)/7 # for continuous covariate in survival
+yr.cont <- (yr-median(2009:2024))/7.5 # for continuous covariate in survival
 yr.factor <- as.numeric(factor(yr))
 # assign a 1 for known age, and 2 for unknown age subadults.
 # we're assuming survival is constant after 6 years so no need to track 
@@ -210,18 +210,23 @@ save(datl=datl, constl, get.last=get.last2, get.first=get.first,
 
 
 # data summaries
-table(datl$y) ; sum(table(datl$y))
 
 library (tidyverse)
 # Setup data for calculating number of vultures
 # and observation of each species during each period
-ly <- datl$y %>%
+y2 <- array(NA, dim=dim(datl$y), dimnames=dimnames(datl$y))
+for(i in 1:constl$nind){
+  for (t in constl$f[i]:constl$last[i]){
+    y2[i,t] <- datl$y[i,t]
+  }} 
+ly <- y2 %>%
   as_tibble(rownames = "id") %>% # Convert to tibble, moving rownames to a column named "Var1"
   pivot_longer(
     cols = starts_with("d"),     # Specify columns to pivot (all starting with "col")
     names_to = "year_month",             # Name the new column for variable names "Var2"
     values_to = "state"            # Name the new column for values "value"
   )
+
 species <- ifelse(constl$sp==0, "W", "R")
 names(species) <- rownames(datl$y)  
 period <- ifelse(yr.cont<0,"Early","Late")
@@ -230,11 +235,11 @@ ly <- merge(ly, species, by.x="id", by.y=0)
 ly <- merge(ly, period, by.x="year_month", by.y=0)
 colnames(ly)[4:5] <- c("species","period")
 # calculate ages
-age <- array(NA, dim=dim(datl$y), dimnames=dimnames(datl$y))
+age <- array(999, dim=dim(datl$y), dimnames=dimnames(datl$y))
 for(i in 1:constl$nind){
   age[i,constl$f[i]] <- datl$first_age[i]-1
-  for (t in (constl$f[i]+1):constl$ntime){
-    age[i,t] <- floor(( (datl$first_age[i]-1) + t/12 - f[i]/12 ))
+  for (t in (constl$f[i]+1):constl$last[i]){
+    age[i,t] <- floor(( (datl$first_age[i]-1) + t/12 - constl$f[i]/12 ))
   }} 
 lage <- age %>%
   as_tibble(rownames = "id") %>% # Convert to tibble, moving rownames to a column named "Var1"
@@ -243,30 +248,39 @@ lage <- age %>%
     names_to = "year_month",             # Name the new column for variable names "Var2"
     values_to = "age"            # Name the new column for values "value"
   )
+lage <- lage[lage$age<999,]
+
 ly <- ly[ !is.na(ly$state), ]
-ly <- merge(ly, lage, by=c("id", "year_month"))
+ly <- merge(ly, lage, by=c("id", "year_month"), all.x=T)
 ly$agec <- ifelse(is.na(ly$age), "SA-Unknown",
             ifelse(ly$age<1, "FY",
               ifelse(ly$age>=1 & ly$age<6, "SA-Known",
                 ifelse(ly$age>=6, "A", NA  ))))
 rh <- ifelse(constl$rehabbed==1, "rehabbed", "no rehab")
 names(rh) <- rownames(datl$y)
-ly <- merge(ly, rh, by.x="id", by.y=0)
+ly <- merge(ly, rh, by.x="id", by.y=0, all.x=T)
 colnames(ly)[8] <- "rehabbed"
-# these sum to <1400 because unknown ages
+# these sum to <1393 because unknown ages
 # number of monthly observations
 
 # number of individuals
 li <- ly[!duplicated(ly$id),]
 
+table(datl$y) ; sum(table(datl$y)[1:3])
+
 table(ly$agec)
 table(ly$period)
+table(ly$species, ly$period)
+table(ly$species, ly$period, ly$rehabbed)
 table(ly$species, ly$period, ly$agec)
 table(ly$species, ly$period, is.na(ly$age))
-table(ly$species, ly$period, ly$rehabbed)
+
 
 table(li$period)
+table(li$species, li$period)
+table(li$species, li$period, li$rehabbed)
 table(li$species, li$period, li$agec)
 table(li$species, li$period, is.na(li$age))
-table(li$species, li$period, li$rehabbed)
 
+write.csv(rownames(datl$y), 
+          file="docs/individIDs_for_Map.csv")
