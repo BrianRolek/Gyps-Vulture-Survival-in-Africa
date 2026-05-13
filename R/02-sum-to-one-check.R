@@ -1,3 +1,9 @@
+#**************
+#* Create a function to check 
+#* that all rows sum to one
+#* when generating random probabilities
+#**************
+
 sumtoone.func <- function(p.tagfailed= runif(1), tagfailed= runif(1), 
                           s=runif(1), p.dead=runif(1)){
 
@@ -10,9 +16,9 @@ ps[1,3]<-(1-tagfailed)*(1-s)
 ps[1,4]<-tagfailed*(1-s)
 
 ps[2,1]<-0
-ps[2,2]<-s
+ps[2,2]<-1
 ps[2,3]<-0
-ps[2,4]<-(1-s)
+ps[2,4]<-0
 
 ps[3,1]<-0
 ps[3,2]<-0
@@ -54,7 +60,3 @@ return(list(truestates.rowsums=rowSums(ps),
             truestates.probs=ps, 
             obsstates.probs=po) )
 }
-
-sumtoone.func()
-
-

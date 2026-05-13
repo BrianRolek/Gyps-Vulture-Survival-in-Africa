@@ -1,0 +1,221 @@
+---
+output-dir: docs 
+title: "Gyps Vulture Survival Analysis and Postprocessing" 
+author: "Brian W. Rolek" 
+email: "brianrolek at gmail dot com" 
+date: "14 May 2026" 
+format: html 
+df-print: kable 
+editor: visual 
+toc: true 
+code-fold: true 
+code-tools: true 
+---
+
+![1. Vultures photographed by Corinne Kendall](vultures.jpg)
+
+## 1. Background
+
+This document provides R and Nimble code to implement multi-event capture-recapture analysis to estimate survival of *Gyps* vultures (African white-backed and Ruppells) in eastern Africa. The code is linked to the following manuscript:
+
+B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Survival of *Gyps* vultures remains low during periods of human-wildlife conflict and management in eastern Africa. Biological Conservation.
+
+## 2. Run survival models
+
+The following code implements three versions of the survival model from telemetry data while estimating probabilities of survival, tag failure, detection of fatality, and detection of tag loss. We do not run it here because the analysis is computationally intensive and may take \~3 hours to complete. Then we calculated WAIC values for model comparisons.
+
+We loaded the necessary packages and data.
+
+```{r}
+#| include: false 
+knitr::read_chunk('R/03-analyses.R')
+```
+
+```{r}
+#| label: setup 
+#| eval: false
+```
+
+### 2.1 The null model
+
+We implemented the null model in Nimble without covariates.
+
+```{r}
+#| label: null model 
+#| eval: false
+```
+
+### 2.2 The global model
+
+We implemented the global model that included all covariates and assessed probability of direction (*PD*) values to retain significant covariates in the reduced model.
+
+```{r}
+#| label: global 
+#| eval: false
+```
+
+### 2.3 The reduced model
+
+We implemented the reduced model that only included significant covariates based on *PD* from the global model.
+
+```{r}
+#| label: reduced 
+#| eval: false 
+#| warning: false
+```
+
+## 3. Model comparison
+
+We compared the predictive accuracy of models using WAIC. We didn't evaluate the code here because it has a long runttime. Instead, we load the results file to inspect the results. The waic.func() is a custom function that uses Nimble's calculateWAIC() to estimate WAIC values. This function is located in the functions.R file.
+
+```{r}
+#| label: model comparison 1 
+#| eval: false 
+#| warning: false
+```
+
+```{r}
+#| label: model comparison 2 
+#| eval: true 
+#| warning: false 
+#| tbl-cap: "Table S1. Model comparison using WAIC."
+```
+
+## 4. Sensitivity analysis
+
+Observation state 2 may have been challenging to correctly assign, so we reassigned data from state 2 to either state 3, 4, or 5 to test the sensitivity of results to state misclassification. Note that misclassifications could be formally accounted for within the dynamic hidden Markov model but larger sample sizes would be needed.
+
+```{r}
+#| include: false 
+knitr::read_chunk('R/04-analysis-sensitivity.R')
+```
+
+```{r}
+#| label: sens analysis 
+#| eval: false 
+#| warning: false
+```
+
+```{r}
+#| label: sens table 
+#| eval: true 
+#| warning: false
+```
+
+## 5. Postprocessing
+
+We created tables and figures from the reduced and global model outputs.
+
+```{r}
+#| include: false 
+knitr::read_chunk('R/05-postprocess.R')
+```
+
+```{r}
+#| label: setup2 
+#| eval: true 
+#| warning: false
+```
+
+### 5.1 Model diagnostics
+
+We checked that rows of the observation and state transition matrices sum to one using randomly generated probabilities. The function sumtoone.func() can be found in the functions.R file. All rows sum to one.
+
+```{r}
+#| label: sumtoone 
+#| eval: true 
+#| warning: false
+```
+
+We examined traceplots and density plots of parameters from the global model. The global model appears to have converged well.
+
+```{r}
+#| label: traceplots global 
+#| eval: true 
+#| warning: false 
+#| fig-cap: "Figure S1: Traceplots (left) and density plots (right) of parameters from the global model. In density plots the black line depicts posterior density while the red line depicts prior density." 
+#| fig-subcap: 
+#| - "" 
+#| - "" 
+#| - "" 
+#| - ""
+```
+
+We examined traceplots and density plots of parameters from the reduced model. The reduced model appears to have converged well.
+
+```{r}
+#| label: traceplots reduced  
+#| eval: true  
+#| warning: false  
+#| fig-cap: "Figure S2: Traceplots (left) and density plots (right) of parameters from the reduced model. In density plots the black line depicts posterior density while red line depicts prior density." 
+#| fig-subcap: 
+#| - "" 
+#| - "" 
+#| - ""
+```
+
+### 5.2 Model estimates
+
+Next, we printed model estimates from the global and reduced models.
+
+```{r}
+#| label: table S1 
+#| eval: true 
+#| warning: false 
+#| tbl-cap: "Table S2. Parameter estimates from the null, global, and reduced models."
+```
+
+### 5.3 Tag failure
+
+We plotted predictions of tag failure in response to age of transmitter.
+
+```{r}
+#| label: tag failure age 
+#| eval: true 
+#| warning: false 
+#| fig-cap: "Figure S3. Predicted tag failure in response to age of transmitter." 
+#| fig-subcap: 
+#| - "(A) Yearly probabilities (above)" 
+#| - "(B) Monthly probabilities (above)" 
+#| layout-ncol: 1 
+#| column: page 
+```
+
+We plotted predictions of tag failure in response to year of study.
+
+```{r}
+#| label: tag failure year 
+#| eval: true 
+#| warning: false 
+#| fig-cap: "Figure S4. Predicted tag failure in response to year." 
+#| fig-subcap: 
+#| - "(A) Yearly probabilities (above)" 
+#| - "(B) Monthly probabilities (above)" 
+#| layout-ncol: 1 
+#| column: page
+```
+
+### 5.4 Survival by age class and study period
+
+We plotted predictions of survival by study period and compared to predictions of all study periods combined.
+
+```{r}
+#| label: survival period 
+#| eval: true 
+#| warning: false 
+#| fig-cap: "Figure S5. Predicted survival (yearly) by study period (A) and combined (B)."
+```
+
+We printed a table and compared survival estimates between periods and combined.
+
+```{r}
+#| label: survival estimates 
+#| eval: true 
+#| warning: false 
+#| tbl-cap: "Table S3. Yearly survival estimates."
+#| tbl-subcap: 
+#| - "(A) Survival during early, late, and combined periods." 
+#| - "(B) Differences in survival by age class."
+#| layout-ncol: 1
+options(kableExtra.auto_format = FALSE)
+```

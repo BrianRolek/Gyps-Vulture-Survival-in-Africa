@@ -1,0 +1,8 @@
+project:
+  title: "Gyps Vulture Website"
+output-dir: docs
+
+editor: visual
+execute:
+  freeze: auto
+

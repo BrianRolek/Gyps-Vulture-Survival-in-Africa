@@ -5,6 +5,7 @@
 library ("readxl")
 library ("lubridate")
 library ("data.table")
+library ("tidyverse")
 # data manip
 dat1 <- read_xlsx("C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\data\\VultureMortalityData RB LD.xlsx",
                   sheet="CombinedData",
@@ -208,10 +209,13 @@ constl <- list(
 save(datl=datl, constl, get.last=get.last2, get.first=get.first, 
      file="data\\data.RData")
 
+# Export list of individuals 
+# included in survival data
+# for GIS map.
+write.csv(file= "C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\GitHub\\Gyps Vulture Survival in Africa\\docs\\individIDs_for_Map.csv",
+          rownames(datl$y) )
 
 # data summaries
-
-library (tidyverse)
 # Setup data for calculating number of vultures
 # and observation of each species during each period
 y2 <- array(NA, dim=dim(datl$y), dimnames=dimnames(datl$y))
@@ -284,3 +288,12 @@ table(li$species, li$period, is.na(li$age))
 
 write.csv(rownames(datl$y), 
           file="docs/individIDs_for_Map.csv")
+
+tdat <- read_xlsx("C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\Projects\\MunirVultures\\data\\VultureMortalityData_transmitter_harness _RBMV.xlsx")
+tdat <- tdat[tdat$UnitID %in% rownames(datl$y),]
+tdat$yr <- year(tdat$DateAdded)
+tdat$period <-  ifelse(tdat$yr %in% c(2009, 2010, 2011),
+                       "Early", "Late")
+
+table(tdat$`Harness type1`)
+table(tdat$`Transmitter type1`, tdat$period)
