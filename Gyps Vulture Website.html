@@ -141,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="vultures.jpg" class="img-fluid figure-img"></p>
-<figcaption>1. Vulture picture. photographed by Corinne Kendall</figcaption>
+<figcaption>1. Vultures photographed by Corinne Kendall</figcaption>
 </figure>
 </div>
 <section id="background" class="level2">
@@ -1309,18 +1309,18 @@ $obsstates.rowsums
 [1] 1 1 1 1
 
 $truestates.probs
-           [,1]        [,2]      [,3]      [,4]
-[1,] 0.02122348 0.008337739 0.6967266 0.2737122
-[2,] 0.00000000 1.000000000 0.0000000 0.0000000
-[3,] 0.00000000 0.000000000 1.0000000 0.0000000
-[4,] 0.00000000 0.000000000 0.0000000 1.0000000
+          [,1]      [,2]       [,3]      [,4]
+[1,] 0.1973844 0.7501412 0.01093125 0.0415432
+[2,] 0.0000000 1.0000000 0.00000000 0.0000000
+[3,] 0.0000000 0.0000000 1.00000000 0.0000000
+[4,] 0.0000000 0.0000000 0.00000000 1.0000000
 
 $obsstates.probs
-     [,1]      [,2]        [,3]        [,4]      [,5]
-[1,]    1 0.0000000 0.000000000 0.000000000 0.0000000
-[2,]    0 0.5388370 0.000000000 0.000000000 0.4611630
-[3,]    0 0.0000000 0.010941387 0.000000000 0.9890586
-[4,]    0 0.5329414 0.005045762 0.005895624 0.4561172</code></pre>
+     [,1]      [,2]      [,3]      [,4]       [,5]
+[1,]    1 0.0000000 0.0000000 0.0000000 0.00000000
+[2,]    0 0.8480745 0.0000000 0.0000000 0.15192548
+[3,]    0 0.0000000 0.6074143 0.0000000 0.39258573
+[4,]    0 0.3329420 0.0922817 0.5151326 0.05964377</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -2096,11 +2096,11 @@ $obsstates.probs
 <span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">lapply</span>(s.diffs, HDInterval<span class="sc">::</span>hdi, <span class="at">credMass=</span><span class="fl">0.95</span>) <span class="sc">|&gt;</span> <span class="fu">do.call</span>(<span class="at">what=</span>rbind) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>) ) </span>
 <span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>surv.diffs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-anonymous-4691263" class="cell quarto-layout-panel anchored" data-layout-ncol="1" data-tbl-cap="Table S3. Yearly survival estimates." data-tbl-subcap="[&quot;(A) Survival during early, late, and combined periods.&quot;,&quot;(B) Differences in survival by age class.&quot;]">
+<div id="tbl-anonymous-8388906" class="cell quarto-layout-panel anchored" data-layout-ncol="1" data-tbl-subcap="[&quot;(A) Survival during early, late, and combined periods.&quot;,&quot;(B) Differences in survival by age class.&quot;]" data-tbl-cap="Table S3. Yearly survival estimates.">
 <div class="quarto-layout-row">
 <div class="kable-table quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <table class="caption-top table table-sm table-striped small">
-<caption>Survival during early, late, and combined periods. {#tbl-anonymous-4691263-1}</caption>
+<caption>Survival during early, late, and combined periods. {#tbl-anonymous-8388906-1}</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
@@ -2201,7 +2201,7 @@ $obsstates.probs
 <div class="quarto-layout-row">
 <div class="kable-table quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <table class="caption-top table table-sm table-striped small">
-<caption>Differences in survival by age class. {#tbl-anonymous-4691263-2}</caption>
+<caption>Differences in survival by age class. {#tbl-anonymous-8388906-2}</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">comparison</th>

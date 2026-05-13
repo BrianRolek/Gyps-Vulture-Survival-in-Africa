@@ -1,6 +1,7 @@
 project:
   title: "Gyps Vulture Website"
-output-dir: docs
+  type: website
+  output-dir: docs
 
 editor: visual
 execute:
