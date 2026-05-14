@@ -48,7 +48,7 @@ MCMCtrace(postl.reduced, "beta", pdf=F, Rhat=T,
 MCMCtrace(postl.reduced, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead"), pdf=F, Rhat=T, 
           priors=rbeta(iters, 1, 1), post_zm = FALSE) 
 
-# ---- table S1 
+# ---- table ests
 # Estimates
 # Survival by management period
 ps <- c(  "delta", "beta",

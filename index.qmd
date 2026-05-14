@@ -100,6 +100,7 @@ knitr::read_chunk('R/04-analysis-sensitivity.R')
 #| label: sens table 
 #| eval: true 
 #| warning: false
+#| tbl-cap: "Table S2. Survival estimates when substituting observation state 2 with either 3, 4, or 5 to evaluate the sensitivity of models to misclassification. Survival here is presented as monthly survival."
 ```
 
 ## 5. Postprocessing
@@ -159,10 +160,10 @@ We examined traceplots and density plots of parameters from the reduced model. T
 Next, we printed model estimates from the global and reduced models.
 
 ```{r}
-#| label: table S1 
+#| label: table ests 
 #| eval: true 
 #| warning: false 
-#| tbl-cap: "Table S2. Parameter estimates from the null, global, and reduced models."
+#| tbl-cap: "Table S3. Parameter estimates from the null, global, and reduced models."
 ```
 
 ### 5.3 Tag failure
@@ -212,7 +213,7 @@ We printed a table and compared survival estimates between periods and combined.
 #| label: survival estimates 
 #| eval: true 
 #| warning: false 
-#| tbl-cap: "Table S3. Yearly survival estimates."
+#| tbl-cap: "Table S4. Yearly survival estimates."
 #| tbl-subcap: 
 #| - "(A) Survival during early, late, and combined periods." 
 #| - "(B) Differences in survival by age class."

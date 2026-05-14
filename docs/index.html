@@ -1116,7 +1116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-235"><a href="#cb7-235" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(post1, post2, post3, datl, <span class="at">file=</span><span class="st">"outputs/gyps-28Apr2026-sensitivitytest.RData"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div class="cell">
+<div class="cell" data-tbl-cap="Table S2. Survival estimates when substituting observation state 2 with either 3, 4, or 5 to evaluate the sensitivity of models to misclassification. Survival here is presented as monthly survival.">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#********************</span></span>
@@ -1201,6 +1201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
+<caption>Table S2. Survival estimates when substituting observation state 2 with either 3, 4, or 5 to evaluate the sensitivity of models to misclassification. Survival here is presented as monthly survival.</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Model</th>
@@ -1372,18 +1373,18 @@ $obsstates.rowsums
 [1] 1 1 1 1
 
 $truestates.probs
-          [,1]       [,2]      [,3]      [,4]
-[1,] 0.1128015 0.01718659 0.7549818 0.1150301
-[2,] 0.0000000 1.00000000 0.0000000 0.0000000
-[3,] 0.0000000 0.00000000 1.0000000 0.0000000
-[4,] 0.0000000 0.00000000 0.0000000 1.0000000
+           [,1]      [,2]        [,3]       [,4]
+[1,] 0.08047421 0.8400265 0.006950178 0.07254913
+[2,] 0.00000000 1.0000000 0.000000000 0.00000000
+[3,] 0.00000000 0.0000000 1.000000000 0.00000000
+[4,] 0.00000000 0.0000000 0.000000000 1.00000000
 
 $obsstates.probs
-     [,1]      [,2]      [,3]       [,4]      [,5]
-[1,]    1 0.0000000 0.0000000 0.00000000 0.0000000
-[2,]    0 0.1463775 0.0000000 0.00000000 0.8536225
-[3,]    0 0.0000000 0.1283413 0.00000000 0.8716587
-[4,]    0 0.1275912 0.1095550 0.01878628 0.7440675</code></pre>
+     [,1]       [,2]      [,3]      [,4]      [,5]
+[1,]    1 0.00000000 0.0000000 0.0000000 0.0000000
+[2,]    0 0.18492283 0.0000000 0.0000000 0.8150772
+[3,]    0 0.00000000 0.8327791 0.0000000 0.1672209
+[4,]    0 0.03092296 0.6787792 0.1539999 0.1362979</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -1470,7 +1471,7 @@ $obsstates.probs
 <section id="model-estimates" class="level3">
 <h3 class="anchored" data-anchor-id="model-estimates">5.2 Model estimates</h3>
 <p>Next, we printed model estimates from the global and reduced models.</p>
-<div class="cell" data-tbl-cap="Table S2. Parameter estimates from the null, global, and reduced models.">
+<div class="cell" data-tbl-cap="Table S3. Parameter estimates from the null, global, and reduced models.">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimates</span></span>
@@ -1500,7 +1501,7 @@ $obsstates.probs
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
-<caption>Table S2. Parameter estimates from the null, global, and reduced models.</caption>
+<caption>Table S3. Parameter estimates from the null, global, and reduced models.</caption>
 <colgroup>
 <col style="width: 26%">
 <col style="width: 9%">
@@ -2159,11 +2160,11 @@ $obsstates.probs
 <span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">lapply</span>(s.diffs, HDInterval<span class="sc">::</span>hdi, <span class="at">credMass=</span><span class="fl">0.95</span>) <span class="sc">|&gt;</span> <span class="fu">do.call</span>(<span class="at">what=</span>rbind) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>) ) </span>
 <span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>surv.diffs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-anonymous-4685157" class="cell quarto-layout-panel anchored" data-tbl-cap="Table S3. Yearly survival estimates." data-layout-ncol="1" data-tbl-subcap="[&quot;(A) Survival during early, late, and combined periods.&quot;,&quot;(B) Differences in survival by age class.&quot;]">
+<div id="tbl-anonymous-2486465" class="cell quarto-layout-panel anchored" data-tbl-subcap="[&quot;(A) Survival during early, late, and combined periods.&quot;,&quot;(B) Differences in survival by age class.&quot;]" data-layout-ncol="1" data-tbl-cap="Table S4. Yearly survival estimates.">
 <div class="quarto-layout-row">
 <div class="kable-table quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <table class="caption-top table table-sm table-striped small">
-<caption>Survival during early, late, and combined periods. {#tbl-anonymous-4685157-1}</caption>
+<caption>Survival during early, late, and combined periods. {#tbl-anonymous-2486465-1}</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
@@ -2264,7 +2265,7 @@ $obsstates.probs
 <div class="quarto-layout-row">
 <div class="kable-table quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <table class="caption-top table table-sm table-striped small">
-<caption>Differences in survival by age class. {#tbl-anonymous-4685157-2}</caption>
+<caption>Differences in survival by age class. {#tbl-anonymous-2486465-2}</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">comparison</th>
@@ -2302,7 +2303,7 @@ $obsstates.probs
 </div>
 <div class="quarto-layout-row">
 <div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<p>Table S3. Yearly survival estimates.</p>
+<p>Table S4. Yearly survival estimates.</p>
 </div>
 </div>
 </div>
@@ -2867,125 +2868,126 @@ $obsstates.probs
 <span id="cb23-120"><a href="#cb23-120" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: sens table </span></span>
 <span id="cb23-121"><a href="#cb23-121" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
 <span id="cb23-122"><a href="#cb23-122" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb23-123"><a href="#cb23-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb23-124"><a href="#cb23-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-125"><a href="#cb23-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. Postprocessing</span></span>
-<span id="cb23-126"><a href="#cb23-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-127"><a href="#cb23-127" aria-hidden="true" tabindex="-1"></a>We created tables and figures from the reduced and global model outputs.</span>
-<span id="cb23-128"><a href="#cb23-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-131"><a href="#cb23-131" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb23-132"><a href="#cb23-132" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false </span></span>
-<span id="cb23-133"><a href="#cb23-133" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">read_chunk</span>(<span class="st">'R/05-postprocess.R'</span>)</span>
-<span id="cb23-134"><a href="#cb23-134" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb23-135"><a href="#cb23-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-138"><a href="#cb23-138" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb23-139"><a href="#cb23-139" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup2 </span></span>
-<span id="cb23-140"><a href="#cb23-140" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb23-141"><a href="#cb23-141" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb23-142"><a href="#cb23-142" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb23-143"><a href="#cb23-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-144"><a href="#cb23-144" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.1 Model diagnostics</span></span>
-<span id="cb23-145"><a href="#cb23-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-146"><a href="#cb23-146" aria-hidden="true" tabindex="-1"></a>We checked that rows of the observation and state transition matrices sum to one using randomly generated probabilities. The function sumtoone.func() can be found in the functions.R file. All rows sum to one.</span>
-<span id="cb23-147"><a href="#cb23-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-150"><a href="#cb23-150" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb23-151"><a href="#cb23-151" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: sumtoone </span></span>
-<span id="cb23-152"><a href="#cb23-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb23-153"><a href="#cb23-153" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb23-154"><a href="#cb23-154" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb23-155"><a href="#cb23-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-156"><a href="#cb23-156" aria-hidden="true" tabindex="-1"></a>We examined traceplots and density plots of parameters from the global model. The global model appears to have converged well.</span>
-<span id="cb23-157"><a href="#cb23-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-160"><a href="#cb23-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb23-161"><a href="#cb23-161" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: traceplots global </span></span>
-<span id="cb23-162"><a href="#cb23-162" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb23-163"><a href="#cb23-163" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
-<span id="cb23-164"><a href="#cb23-164" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S1: Traceplots (left) and density plots (right) of parameters from the global model. In density plots the black line depicts posterior density while the red line depicts prior density." </span></span>
-<span id="cb23-165"><a href="#cb23-165" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
-<span id="cb23-166"><a href="#cb23-166" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "" </span></span>
+<span id="cb23-123"><a href="#cb23-123" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Table S2. Survival estimates when substituting observation state 2 with either 3, 4, or 5 to evaluate the sensitivity of models to misclassification. Survival here is presented as monthly survival."</span></span>
+<span id="cb23-124"><a href="#cb23-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb23-125"><a href="#cb23-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-126"><a href="#cb23-126" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. Postprocessing</span></span>
+<span id="cb23-127"><a href="#cb23-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-128"><a href="#cb23-128" aria-hidden="true" tabindex="-1"></a>We created tables and figures from the reduced and global model outputs.</span>
+<span id="cb23-129"><a href="#cb23-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-132"><a href="#cb23-132" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb23-133"><a href="#cb23-133" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false </span></span>
+<span id="cb23-134"><a href="#cb23-134" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">read_chunk</span>(<span class="st">'R/05-postprocess.R'</span>)</span>
+<span id="cb23-135"><a href="#cb23-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb23-136"><a href="#cb23-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-139"><a href="#cb23-139" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb23-140"><a href="#cb23-140" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup2 </span></span>
+<span id="cb23-141"><a href="#cb23-141" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb23-142"><a href="#cb23-142" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb23-143"><a href="#cb23-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb23-144"><a href="#cb23-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-145"><a href="#cb23-145" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.1 Model diagnostics</span></span>
+<span id="cb23-146"><a href="#cb23-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-147"><a href="#cb23-147" aria-hidden="true" tabindex="-1"></a>We checked that rows of the observation and state transition matrices sum to one using randomly generated probabilities. The function sumtoone.func() can be found in the functions.R file. All rows sum to one.</span>
+<span id="cb23-148"><a href="#cb23-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-151"><a href="#cb23-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb23-152"><a href="#cb23-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: sumtoone </span></span>
+<span id="cb23-153"><a href="#cb23-153" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb23-154"><a href="#cb23-154" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb23-155"><a href="#cb23-155" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb23-156"><a href="#cb23-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-157"><a href="#cb23-157" aria-hidden="true" tabindex="-1"></a>We examined traceplots and density plots of parameters from the global model. The global model appears to have converged well.</span>
+<span id="cb23-158"><a href="#cb23-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-161"><a href="#cb23-161" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb23-162"><a href="#cb23-162" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: traceplots global </span></span>
+<span id="cb23-163"><a href="#cb23-163" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb23-164"><a href="#cb23-164" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
+<span id="cb23-165"><a href="#cb23-165" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S1: Traceplots (left) and density plots (right) of parameters from the global model. In density plots the black line depicts posterior density while the red line depicts prior density." </span></span>
+<span id="cb23-166"><a href="#cb23-166" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
 <span id="cb23-167"><a href="#cb23-167" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "" </span></span>
 <span id="cb23-168"><a href="#cb23-168" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "" </span></span>
-<span id="cb23-169"><a href="#cb23-169" aria-hidden="true" tabindex="-1"></a><span class="co">#| - ""</span></span>
-<span id="cb23-170"><a href="#cb23-170" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb23-171"><a href="#cb23-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-172"><a href="#cb23-172" aria-hidden="true" tabindex="-1"></a>We examined traceplots and density plots of parameters from the reduced model. The reduced model appears to have converged well.</span>
-<span id="cb23-173"><a href="#cb23-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-176"><a href="#cb23-176" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb23-177"><a href="#cb23-177" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: traceplots reduced  </span></span>
-<span id="cb23-178"><a href="#cb23-178" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true  </span></span>
-<span id="cb23-179"><a href="#cb23-179" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false  </span></span>
-<span id="cb23-180"><a href="#cb23-180" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S2: Traceplots (left) and density plots (right) of parameters from the reduced model. In density plots the black line depicts posterior density while red line depicts prior density." </span></span>
-<span id="cb23-181"><a href="#cb23-181" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
-<span id="cb23-182"><a href="#cb23-182" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "" </span></span>
+<span id="cb23-169"><a href="#cb23-169" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "" </span></span>
+<span id="cb23-170"><a href="#cb23-170" aria-hidden="true" tabindex="-1"></a><span class="co">#| - ""</span></span>
+<span id="cb23-171"><a href="#cb23-171" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb23-172"><a href="#cb23-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-173"><a href="#cb23-173" aria-hidden="true" tabindex="-1"></a>We examined traceplots and density plots of parameters from the reduced model. The reduced model appears to have converged well.</span>
+<span id="cb23-174"><a href="#cb23-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-177"><a href="#cb23-177" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb23-178"><a href="#cb23-178" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: traceplots reduced  </span></span>
+<span id="cb23-179"><a href="#cb23-179" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true  </span></span>
+<span id="cb23-180"><a href="#cb23-180" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false  </span></span>
+<span id="cb23-181"><a href="#cb23-181" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S2: Traceplots (left) and density plots (right) of parameters from the reduced model. In density plots the black line depicts posterior density while red line depicts prior density." </span></span>
+<span id="cb23-182"><a href="#cb23-182" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
 <span id="cb23-183"><a href="#cb23-183" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "" </span></span>
-<span id="cb23-184"><a href="#cb23-184" aria-hidden="true" tabindex="-1"></a><span class="co">#| - ""</span></span>
-<span id="cb23-185"><a href="#cb23-185" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb23-186"><a href="#cb23-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-187"><a href="#cb23-187" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.2 Model estimates</span></span>
-<span id="cb23-188"><a href="#cb23-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-189"><a href="#cb23-189" aria-hidden="true" tabindex="-1"></a>Next, we printed model estimates from the global and reduced models.</span>
-<span id="cb23-190"><a href="#cb23-190" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-193"><a href="#cb23-193" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb23-194"><a href="#cb23-194" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: table S1 </span></span>
-<span id="cb23-195"><a href="#cb23-195" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb23-196"><a href="#cb23-196" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
-<span id="cb23-197"><a href="#cb23-197" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Table S2. Parameter estimates from the null, global, and reduced models."</span></span>
-<span id="cb23-198"><a href="#cb23-198" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb23-199"><a href="#cb23-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-200"><a href="#cb23-200" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.3 Tag failure</span></span>
-<span id="cb23-201"><a href="#cb23-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-202"><a href="#cb23-202" aria-hidden="true" tabindex="-1"></a>We plotted predictions of tag failure in response to age of transmitter.</span>
-<span id="cb23-203"><a href="#cb23-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-206"><a href="#cb23-206" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb23-207"><a href="#cb23-207" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tag failure age </span></span>
-<span id="cb23-208"><a href="#cb23-208" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb23-209"><a href="#cb23-209" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
-<span id="cb23-210"><a href="#cb23-210" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S3. Predicted tag failure in response to age of transmitter." </span></span>
-<span id="cb23-211"><a href="#cb23-211" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
-<span id="cb23-212"><a href="#cb23-212" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(A) Yearly probabilities (above)" </span></span>
-<span id="cb23-213"><a href="#cb23-213" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(B) Monthly probabilities (above)" </span></span>
-<span id="cb23-214"><a href="#cb23-214" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1 </span></span>
-<span id="cb23-215"><a href="#cb23-215" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page </span></span>
-<span id="cb23-216"><a href="#cb23-216" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb23-217"><a href="#cb23-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-218"><a href="#cb23-218" aria-hidden="true" tabindex="-1"></a>We plotted predictions of tag failure in response to year of study.</span>
-<span id="cb23-219"><a href="#cb23-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-222"><a href="#cb23-222" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb23-223"><a href="#cb23-223" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tag failure year </span></span>
-<span id="cb23-224"><a href="#cb23-224" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb23-225"><a href="#cb23-225" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
-<span id="cb23-226"><a href="#cb23-226" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S4. Predicted tag failure in response to year." </span></span>
-<span id="cb23-227"><a href="#cb23-227" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
-<span id="cb23-228"><a href="#cb23-228" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(A) Yearly probabilities (above)" </span></span>
-<span id="cb23-229"><a href="#cb23-229" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(B) Monthly probabilities (above)" </span></span>
-<span id="cb23-230"><a href="#cb23-230" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1 </span></span>
-<span id="cb23-231"><a href="#cb23-231" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page</span></span>
-<span id="cb23-232"><a href="#cb23-232" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb23-233"><a href="#cb23-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-234"><a href="#cb23-234" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.4 Survival by age class and study period</span></span>
-<span id="cb23-235"><a href="#cb23-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-236"><a href="#cb23-236" aria-hidden="true" tabindex="-1"></a>We plotted predictions of survival by study period and compared to predictions of all study periods combined.</span>
-<span id="cb23-237"><a href="#cb23-237" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-240"><a href="#cb23-240" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb23-241"><a href="#cb23-241" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: survival period </span></span>
-<span id="cb23-242"><a href="#cb23-242" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb23-243"><a href="#cb23-243" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
-<span id="cb23-244"><a href="#cb23-244" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S5. Predicted survival (yearly) by study period (A) and combined (B)."</span></span>
-<span id="cb23-245"><a href="#cb23-245" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb23-246"><a href="#cb23-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-247"><a href="#cb23-247" aria-hidden="true" tabindex="-1"></a>We printed a table and compared survival estimates between periods and combined.</span>
-<span id="cb23-248"><a href="#cb23-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-251"><a href="#cb23-251" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb23-252"><a href="#cb23-252" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: survival estimates </span></span>
-<span id="cb23-253"><a href="#cb23-253" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb23-254"><a href="#cb23-254" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
-<span id="cb23-255"><a href="#cb23-255" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Table S3. Yearly survival estimates."</span></span>
-<span id="cb23-256"><a href="#cb23-256" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-subcap: </span></span>
-<span id="cb23-257"><a href="#cb23-257" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(A) Survival during early, late, and combined periods." </span></span>
-<span id="cb23-258"><a href="#cb23-258" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(B) Differences in survival by age class."</span></span>
-<span id="cb23-259"><a href="#cb23-259" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1</span></span>
-<span id="cb23-260"><a href="#cb23-260" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">kableExtra.auto_format =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb23-261"><a href="#cb23-261" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb23-184"><a href="#cb23-184" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "" </span></span>
+<span id="cb23-185"><a href="#cb23-185" aria-hidden="true" tabindex="-1"></a><span class="co">#| - ""</span></span>
+<span id="cb23-186"><a href="#cb23-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb23-187"><a href="#cb23-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-188"><a href="#cb23-188" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.2 Model estimates</span></span>
+<span id="cb23-189"><a href="#cb23-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-190"><a href="#cb23-190" aria-hidden="true" tabindex="-1"></a>Next, we printed model estimates from the global and reduced models.</span>
+<span id="cb23-191"><a href="#cb23-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-194"><a href="#cb23-194" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb23-195"><a href="#cb23-195" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: table ests </span></span>
+<span id="cb23-196"><a href="#cb23-196" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb23-197"><a href="#cb23-197" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
+<span id="cb23-198"><a href="#cb23-198" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Table S3. Parameter estimates from the null, global, and reduced models."</span></span>
+<span id="cb23-199"><a href="#cb23-199" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb23-200"><a href="#cb23-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-201"><a href="#cb23-201" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.3 Tag failure</span></span>
+<span id="cb23-202"><a href="#cb23-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-203"><a href="#cb23-203" aria-hidden="true" tabindex="-1"></a>We plotted predictions of tag failure in response to age of transmitter.</span>
+<span id="cb23-204"><a href="#cb23-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-207"><a href="#cb23-207" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb23-208"><a href="#cb23-208" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tag failure age </span></span>
+<span id="cb23-209"><a href="#cb23-209" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb23-210"><a href="#cb23-210" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
+<span id="cb23-211"><a href="#cb23-211" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S3. Predicted tag failure in response to age of transmitter." </span></span>
+<span id="cb23-212"><a href="#cb23-212" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
+<span id="cb23-213"><a href="#cb23-213" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(A) Yearly probabilities (above)" </span></span>
+<span id="cb23-214"><a href="#cb23-214" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(B) Monthly probabilities (above)" </span></span>
+<span id="cb23-215"><a href="#cb23-215" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1 </span></span>
+<span id="cb23-216"><a href="#cb23-216" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page </span></span>
+<span id="cb23-217"><a href="#cb23-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb23-218"><a href="#cb23-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-219"><a href="#cb23-219" aria-hidden="true" tabindex="-1"></a>We plotted predictions of tag failure in response to year of study.</span>
+<span id="cb23-220"><a href="#cb23-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-223"><a href="#cb23-223" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb23-224"><a href="#cb23-224" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tag failure year </span></span>
+<span id="cb23-225"><a href="#cb23-225" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb23-226"><a href="#cb23-226" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
+<span id="cb23-227"><a href="#cb23-227" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S4. Predicted tag failure in response to year." </span></span>
+<span id="cb23-228"><a href="#cb23-228" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
+<span id="cb23-229"><a href="#cb23-229" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(A) Yearly probabilities (above)" </span></span>
+<span id="cb23-230"><a href="#cb23-230" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(B) Monthly probabilities (above)" </span></span>
+<span id="cb23-231"><a href="#cb23-231" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1 </span></span>
+<span id="cb23-232"><a href="#cb23-232" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page</span></span>
+<span id="cb23-233"><a href="#cb23-233" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb23-234"><a href="#cb23-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-235"><a href="#cb23-235" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.4 Survival by age class and study period</span></span>
+<span id="cb23-236"><a href="#cb23-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-237"><a href="#cb23-237" aria-hidden="true" tabindex="-1"></a>We plotted predictions of survival by study period and compared to predictions of all study periods combined.</span>
+<span id="cb23-238"><a href="#cb23-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-241"><a href="#cb23-241" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb23-242"><a href="#cb23-242" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: survival period </span></span>
+<span id="cb23-243"><a href="#cb23-243" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb23-244"><a href="#cb23-244" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
+<span id="cb23-245"><a href="#cb23-245" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S5. Predicted survival (yearly) by study period (A) and combined (B)."</span></span>
+<span id="cb23-246"><a href="#cb23-246" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb23-247"><a href="#cb23-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-248"><a href="#cb23-248" aria-hidden="true" tabindex="-1"></a>We printed a table and compared survival estimates between periods and combined.</span>
+<span id="cb23-249"><a href="#cb23-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-252"><a href="#cb23-252" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb23-253"><a href="#cb23-253" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: survival estimates </span></span>
+<span id="cb23-254"><a href="#cb23-254" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb23-255"><a href="#cb23-255" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
+<span id="cb23-256"><a href="#cb23-256" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Table S4. Yearly survival estimates."</span></span>
+<span id="cb23-257"><a href="#cb23-257" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-subcap: </span></span>
+<span id="cb23-258"><a href="#cb23-258" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(A) Survival during early, late, and combined periods." </span></span>
+<span id="cb23-259"><a href="#cb23-259" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(B) Differences in survival by age class."</span></span>
+<span id="cb23-260"><a href="#cb23-260" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1</span></span>
+<span id="cb23-261"><a href="#cb23-261" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">kableExtra.auto_format =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb23-262"><a href="#cb23-262" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
