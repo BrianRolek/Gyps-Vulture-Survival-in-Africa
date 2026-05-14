@@ -1,9 +1,0 @@
-project:
-  title: "Gyps Vulture Website"
-  type: website
-  output-dir: docs
-
-editor: visual
-execute:
-  freeze: auto
-
