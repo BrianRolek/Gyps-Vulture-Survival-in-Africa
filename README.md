@@ -1,4 +1,4 @@
-This repository contains supplementary files (data and scripts) for implementation of survival analyses of *Gyps* vultures in eastern Africa. Analyses included multi-event capture-recapture survival models implemented using R, NIMBLE, and NIMBLEECOLOGY. The accompanying manuscript is:
+This repository contains supplementary files (data and scripts) for implementation of survival analyses of *Gyps* vultures (African white-backed and Ruppell's) in eastern Africa. Analyses included multi-event capture-recapture survival models implemented using R, NIMBLE, and NIMBLEECOLOGY. The accompanying manuscript is:
 
 B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Low survival of *Gyps* vultures in eastern Africa coinciding with interventions to address poisoning.
 
