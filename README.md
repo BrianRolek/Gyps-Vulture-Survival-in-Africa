@@ -1,12 +1,12 @@
-This repository contains supplementary files (data and scripts) for implementation of survival analyses of Gyps vultures in Kenya using R and NIMBLE. Analyses included multi-event capture-recapture survival models. The accompanying manuscript is:
+This repository contains supplementary files (data and scripts) for implementation of survival analyses of *Gyps* vultures in Kenya using R and NIMBLE. Analyses included multi-event capture-recapture survival models. The accompanying manuscript is:
 
 B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Survival of *Gyps* vultures remains low during periods of human-wildlife conflict and management in eastern Africa.
 
-Data are included in the "data" folder as .rdata files. R and nimble code are included in the "R" folder. Use load("data\\data.RData") to access the data in R and the data are saved within the list objects "datl" and "constl". Additional details are included within the manuscript and appendix.
+Data are included in the "data" folder as .rdata files. R and NIMBLE code are included in the "R" folder. Use load("data\\data.RData") to access the data in R and the data are saved within the list objects "datl" and "constl". Additional details are included within the manuscript and appendix.
 
 datl : a list object
 
-- *y*: the observation state of each Gyps vulture (rows) during each time step (columns). Observation states can range between one and five and are fully described in the methods. A matrix of dimensions *nind* x *ntime*.
+- *y*: the observation state of each *Gyps* vulture (rows) during each time step (columns). Observation states can range between one and five and are fully described in the methods. A matrix of dimensions *nind* x *ntime*.
 
 - *first_age*: the estimated age of each vulture during first capture. NAs indicate that the vulture was a subadult that could not be accurately aged. The NAs are imputed by using a submodel for age class. A vector of length *nind*.
 
@@ -16,7 +16,7 @@ constl: a list object
 
 - *last*: The last time step when a vulture was observed as a fatality or the time step when a vulture disappeared from tracking. A vector of length *nind*.
 
--  *period.cat*: an explanatory variable describing which study period a vulture was observed within (0 = 2009-2011, 1= 2017-2024). A vector of length *ntime*.
+- *period.cat*: an explanatory variable describing which study period a vulture was observed within (0 = 2009-2011, 1= 2017-2024). A vector of length *ntime*.
 
 - *year.cont*: year as a continuous explanatory variable, centered so the median is zero and scaled between -1 and 1. A vector of length *ntime*.
 
