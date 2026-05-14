@@ -209,8 +209,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="background" class="level2">
 <h2 class="anchored" data-anchor-id="background">1. Background</h2>
-<p>This document provides R and Nimble code to implement multi-event capture-recapture analysis to estimate survival of <em>Gyps</em> vultures (African white-backed and Ruppells) in eastern Africa. The code is linked to the following manuscript:</p>
-<p>B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Survival of <em>Gyps</em> vultures remains low during periods of human-wildlife conflict and management in eastern Africa. Biological Conservation.</p>
+<p>This document provides R and Nimble code to implement multi-event capture-recapture analysis to estimate survival of <em>Gyps</em> vultures (African white-backed and Ruppells) in eastern Africa. Code is linked to the following manuscript:</p>
+<p>B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Low survival of <em>Gyps</em> vultures in eastern Africa coinciding with interventions to address poisoning.</p>
 </section>
 <section id="run-survival-models" class="level2">
 <h2 class="anchored" data-anchor-id="run-survival-models">2. Run survival models</h2>
@@ -1373,18 +1373,18 @@ $obsstates.rowsums
 [1] 1 1 1 1
 
 $truestates.probs
-           [,1]      [,2]        [,3]       [,4]
-[1,] 0.08047421 0.8400265 0.006950178 0.07254913
-[2,] 0.00000000 1.0000000 0.000000000 0.00000000
-[3,] 0.00000000 0.0000000 1.000000000 0.00000000
-[4,] 0.00000000 0.0000000 0.000000000 1.00000000
+          [,1]      [,2]      [,3]       [,4]
+[1,] 0.7533801 0.1221537 0.1071008 0.01736541
+[2,] 0.0000000 1.0000000 0.0000000 0.00000000
+[3,] 0.0000000 0.0000000 1.0000000 0.00000000
+[4,] 0.0000000 0.0000000 0.0000000 1.00000000
 
 $obsstates.probs
-     [,1]       [,2]      [,3]      [,4]      [,5]
-[1,]    1 0.00000000 0.0000000 0.0000000 0.0000000
-[2,]    0 0.18492283 0.0000000 0.0000000 0.8150772
-[3,]    0 0.00000000 0.8327791 0.0000000 0.1672209
-[4,]    0 0.03092296 0.6787792 0.1539999 0.1362979</code></pre>
+     [,1]      [,2]      [,3]      [,4]      [,5]
+[1,]    1 0.0000000 0.0000000 0.0000000 0.0000000
+[2,]    0 0.1973677 0.0000000 0.0000000 0.8026323
+[3,]    0 0.0000000 0.3212755 0.0000000 0.6787245
+[4,]    0 0.1339583 0.2578661 0.0634094 0.5447662</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -2160,11 +2160,11 @@ $obsstates.probs
 <span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">lapply</span>(s.diffs, HDInterval<span class="sc">::</span>hdi, <span class="at">credMass=</span><span class="fl">0.95</span>) <span class="sc">|&gt;</span> <span class="fu">do.call</span>(<span class="at">what=</span>rbind) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>) ) </span>
 <span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>surv.diffs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-anonymous-2486465" class="cell quarto-layout-panel anchored" data-tbl-subcap="[&quot;(A) Survival during early, late, and combined periods.&quot;,&quot;(B) Differences in survival by age class.&quot;]" data-layout-ncol="1" data-tbl-cap="Table S4. Yearly survival estimates.">
+<div id="tbl-anonymous-7874780" class="cell quarto-layout-panel anchored" data-layout-ncol="1" data-tbl-cap="Table S4. Yearly survival estimates." data-tbl-subcap="[&quot;(A) Survival during early, late, and combined periods.&quot;,&quot;(B) Differences in survival by age class.&quot;]">
 <div class="quarto-layout-row">
 <div class="kable-table quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <table class="caption-top table table-sm table-striped small">
-<caption>Survival during early, late, and combined periods. {#tbl-anonymous-2486465-1}</caption>
+<caption>Survival during early, late, and combined periods. {#tbl-anonymous-7874780-1}</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
@@ -2265,7 +2265,7 @@ $obsstates.probs
 <div class="quarto-layout-row">
 <div class="kable-table quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <table class="caption-top table table-sm table-striped small">
-<caption>Differences in survival by age class. {#tbl-anonymous-2486465-2}</caption>
+<caption>Differences in survival by age class. {#tbl-anonymous-7874780-2}</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">comparison</th>
@@ -2784,9 +2784,9 @@ $obsstates.probs
 <span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Background</span></span>
 <span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>This document provides R and Nimble code to implement multi-event capture-recapture analysis to estimate survival of *Gyps* vultures (African white-backed and Ruppells) in eastern Africa. The code is linked to the following manuscript:</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>This document provides R and Nimble code to implement multi-event capture-recapture analysis to estimate survival of *Gyps* vultures (African white-backed and Ruppells) in eastern Africa. Code is linked to the following manuscript:</span>
 <span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Survival of *Gyps* vultures remains low during periods of human-wildlife conflict and management in eastern Africa. Biological Conservation.</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Low survival of *Gyps* vultures in eastern Africa coinciding with interventions to address poisoning.</span>
 <span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Run survival models</span></span>
 <span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a></span>

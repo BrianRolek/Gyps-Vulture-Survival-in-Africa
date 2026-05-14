@@ -16,9 +16,9 @@ code-tools: true
 
 ## 1. Background
 
-This document provides R and Nimble code to implement multi-event capture-recapture analysis to estimate survival of *Gyps* vultures (African white-backed and Ruppells) in eastern Africa. The code is linked to the following manuscript:
+This document provides R and Nimble code to implement multi-event capture-recapture analysis to estimate survival of *Gyps* vultures (African white-backed and Ruppells) in eastern Africa. Code is linked to the following manuscript:
 
-B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Survival of *Gyps* vultures remains low during periods of human-wildlife conflict and management in eastern Africa. Biological Conservation.
+B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Low survival of *Gyps* vultures in eastern Africa coinciding with interventions to address poisoning.
 
 ## 2. Run survival models
 
