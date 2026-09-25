@@ -1402,18 +1402,18 @@ $obsstates.rowsums
 [1] 1 1 1 1
 
 $truestates.probs
-          [,1]        [,2]      [,3]        [,4]
-[1,] 0.4915136 0.001011729 0.5064322 0.001042437
-[2,] 0.0000000 1.000000000 0.0000000 0.000000000
-[3,] 0.0000000 0.000000000 1.0000000 0.000000000
-[4,] 0.0000000 0.000000000 0.0000000 1.000000000
+          [,1]      [,2]      [,3]      [,4]
+[1,] 0.1443881 0.4383003 0.1034083 0.3139033
+[2,] 0.0000000 1.0000000 0.0000000 0.0000000
+[3,] 0.0000000 0.0000000 1.0000000 0.0000000
+[4,] 0.0000000 0.0000000 0.0000000 1.0000000
 
 $obsstates.probs
-     [,1]       [,2]      [,3]       [,4]      [,5]
-[1,]    1 0.00000000 0.0000000 0.00000000 0.0000000
-[2,]    0 0.09874057 0.0000000 0.00000000 0.9012594
-[3,]    0 0.00000000 0.1257971 0.00000000 0.8742029
-[4,]    0 0.08631929 0.1133758 0.01242128 0.7878836</code></pre>
+     [,1]       [,2]       [,3]      [,4]        [,5]
+[1,]    1 0.00000000 0.00000000 0.0000000 0.000000000
+[2,]    0 0.97250416 0.00000000 0.0000000 0.027495837
+[3,]    0 0.00000000 0.95571669 0.0000000 0.044283315
+[4,]    0 0.04306571 0.02627823 0.9294385 0.001217607</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -2284,7 +2284,7 @@ $obsstates.probs
 <span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">lapply</span>(s.diffs, HDInterval<span class="sc">::</span>hdi, <span class="at">credMass=</span><span class="fl">0.95</span>) <span class="sc">|&gt;</span> <span class="fu">do.call</span>(<span class="at">what=</span>rbind) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>) ) </span>
 <span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>surv.diffs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell quarto-layout-panel" data-tbl-cap="Table S5. Compare survival differences by age class." data-layout-ncol="1">
+<div class="cell quarto-layout-panel" data-layout-ncol="1" data-tbl-cap="Table S5. Compare survival differences by age class.">
 <div class="quarto-layout-row">
 <div class="kable-table quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <table class="caption-top table table-sm table-striped small">
@@ -2380,25 +2380,25 @@ $obsstates.probs
 <span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a><span class="co"># pop.growth rate contains the posterior draws of lambda</span></span>
 <span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a><span class="co"># where one is a stable population</span></span>
 <span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>pop.growth.rate <span class="ot">&lt;-</span> lambda_values <span class="sc">|&gt;</span> <span class="fu">unlist</span>() </span>
-<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"Geometric mean population growth rate="</span>,</span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"Geometric mean population growth rate = "</span>,</span>
 <span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(pop.growth.rate))), <span class="dv">3</span>)) <span class="sc">|&gt;</span> <span class="fu">print</span>() <span class="co"># Geometric mean</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Geometric mean population growth rate=0.91"</code></pre>
+<pre><code>[1] "Geometric mean population growth rate = 0.91"</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"Median="</span>, <span class="fu">round</span>(<span class="fu">median</span>(pop.growth.rate),<span class="dv">3</span>)) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"Median = "</span>, <span class="fu">round</span>(<span class="fu">median</span>(pop.growth.rate),<span class="dv">3</span>)) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Median=0.913"</code></pre>
+<pre><code>[1] "Median = 0.913"</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"95% HDIs="</span>, <span class="fu">round</span>(<span class="fu">hdi</span>(pop.growth.rate),<span class="dv">3</span>)) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"95% HDIs = "</span>, <span class="fu">round</span>(<span class="fu">hdi</span>(pop.growth.rate),<span class="dv">3</span>)) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "95% HDIs=0.81"  "95% HDIs=1.015"</code></pre>
+<pre><code>[1] "95% HDIs = 0.81"  "95% HDIs = 1.015"</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -2413,11 +2413,11 @@ $obsstates.probs
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"Probability of decline, i.e. lambda&lt;1="</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"Probability of decline (lambda&lt;1) = "</span>,</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">mean</span>(pop.growth.rate<span class="sc">&lt;</span><span class="dv">1</span>),<span class="dv">3</span>)) <span class="sc">|&gt;</span> <span class="fu">print</span>() <span class="co"># probability of lambda &lt;1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Probability of decline, i.e. lambda&lt;1=0.958"</code></pre>
+<pre><code>[1] "Probability of decline (lambda&lt;1) = 0.958"</code></pre>
 </div>
 </div>
 
