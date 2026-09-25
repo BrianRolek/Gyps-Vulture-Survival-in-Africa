@@ -26,8 +26,8 @@ post.reduced <- do.call(rbind, postl.reduced)
 p3 <- MCMCpstr(postl.reduced, pars[-1], type="chains")
 p4 <- mcmc.list(postl.reduced)
 
-# Model diagnostics
 # ---- sumtoone
+# Model diagnostics
 sumtoone.func()
 # Check that survival priors ~dbeta(1,1) are 
 # not restricting inference of survival
@@ -47,9 +47,9 @@ hist(p3$mean.s[2,]^12, xlab="Survival (Yearly)", main="Subadult")
 hist(p3$mean.s[3,], xlab="Survival (Monthly)", main="Adult")
 hist(p3$mean.s[3,]^12, xlab="Survival (Yearly)", main="Adult")
 dev.off()
+# ---- traceplots global
 # Check for convergence
 # Priors are depicted in red
-# ---- traceplots global
 iters <- ncol(p1$delta)
 # Priors of ~dnorm(mean = 0, sd = 10)
 MCMCtrace(postl.global, "delta", pdf=F, Rhat=T, 
@@ -91,6 +91,7 @@ for (i in 1:length(flnms)){
 names(coef.ests) <- c("null", "global", "reduced")
 coef.ests2 <- do.call(rbind, coef.ests)
 coef.ests2
+# ---- writecsv2
 # write.csv(file= "docs\\Coef_ests.csv",
 #           coef.ests2)
 
@@ -164,7 +165,7 @@ pmta
 ggsave("figs\\transmitter age and failure.tiff",
        pyta, device="tiff",
        width=6.5, height=4, units="in", dpi=300)
-# 
+# ---- saveplots3
 # ggsave("figs\\transmitter age and failure-byMonth.tiff",
 #        pmta, device="tiff",
 #        width=6.5, height=4, units="in", dpi=300)
@@ -238,6 +239,7 @@ pmty <- ggplot() + theme_minimal() +
 
 pyty
 pmty
+# ---- saveplots2 
 # ggsave("figs\\tagfailure-year.tiff",
 #        pyty, device="tiff", 
 #        width=6.5, height=4, units="in", dpi=300)
@@ -271,7 +273,6 @@ ps3 <- lss |>
   ylab("") + xlab("Survival (yearly probability)") +
   xlim(0, 1) +
   coord_flip() 
-  #ggtitle("(B) Combined") 
 
 ni <- ncol(p1$delta)
 pred.man <- array(NA, dim=c(3, 2, ni), 
@@ -287,29 +288,26 @@ lp.man$pred <- plogis(lp.man$value)
 
 p4 <- ggplot(data=lp.man, aes(x=pred^12, y=Period)) + 
   theme_minimal() +
-  # geom_line(data=lp.man, aes(x=pred^12, y=Period, group=iter),
-  #           color="gray40", linewidth=0.5, alpha=0.025) +
-  # stat_pointinterval(.width=c(0.85, 0.95), 
-  #                    point_interval ="median_hdci") +
   stat_halfeye(.width=c(0.85, 0.95), point_interval="median_hdci") +
   facet_wrap(facets=vars(Ageclass)) + 
   xlim(0,1) +
   coord_flip() +
   ylab("Period") + xlab("Survival (yearly probability)") 
-  #ggtitle("(A) Period")
 
 all_p <- ggarrange(p4, ps3, nrow=2)
 
 all_p
-ggsave("figs\\survival-ageclass-period-combined.tiff",
-       all_p, device="jpeg",
-       width=6, height=6, units="in", dpi=300)
-ggsave("figs\\survival-ageclass-combined.tiff",
-       ps3, device="jpeg",
-       width=6, height=4, units="in", dpi=300)
-ggsave("figs\\survival-ageclass-period.tiff",
-       p4, device="jpeg",
-       width=6, height=4, units="in", dpi=300)
+# ---- saveplots1 
+# ggsave("figs\\survival-ageclass-period-combined.tiff",
+#        all_p, device="jpeg",
+#        width=6, height=6, units="in", dpi=300)
+# ggsave("figs\\survival-ageclass-combined.tiff",
+#        ps3, device="jpeg",
+#        width=6, height=4, units="in", dpi=300)
+# ggsave("figs\\survival-ageclass-period.tiff",
+#        p4, device="jpeg",
+#        width=6, height=4, units="in", dpi=300)
+
 # ---- survival estimates 
 # survival by age class
 # and management period
@@ -338,9 +336,11 @@ df2 <- data.frame("Age.class"= c("First year", "Subadult", "Adult"),
 df3 <- rbind(df, df2)
 df3 <- df3[order(df3$Age.class, df3$Period), ]
 df3
+# ---- writecsv1
 # write.csv(file= "docs\\Survival_age_period.csv",
 #           df3  )
 
+# ---- survival differences
 # Generate probability of direction
 # for comparing survival of age classes
 # First we calculate the posterior survival differences
@@ -355,8 +355,3 @@ surv.diffs <- data.frame( comparison = c("adults and subadults", "adults and fir
                           median.diff = lapply(s.diffs, median ) |> unlist() |> round(3),
                           lapply(s.diffs, HDInterval::hdi, credMass=0.95) |> do.call(what=rbind) |> round(3) ) 
 surv.diffs
-
-
-
-
-

@@ -1,6 +1,6 @@
 This repository contains supplementary files (data and scripts) for implementation of survival analyses of *Gyps* vultures (African white-backed and Ruppell's) in eastern Africa. Analyses included multi-event capture-recapture survival models implemented using R, NIMBLE, and NIMBLEECOLOGY. The accompanying manuscript is:
 
-B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Low survival of *Gyps* vultures in eastern Africa coinciding with interventions to address poisoning.
+B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Low survival of *Gyps* vultures in eastern Africa coinciding with interventions to address poisoning. Biological Conservation.
 
 A full workflow is provided in docs/index.html or can be viewed at <https://brianrolek.github.io/Gyps-Vulture-Survival-in-Africa/>.
 
@@ -8,7 +8,7 @@ Data are included in the "data" folder as .rdata files. R and NIMBLE code are in
 
 datl : a list object
 
-- *y*: the observation state of each *Gyps* vulture (rows) during each time step (columns). Observation states can range between one and five and are fully described in the methods. A matrix of dimensions *nind* x *ntime*.
+- *y*: the observation state of each *Gyps* vulture (rows) during each time step (columns). Observation states can range between one and five. A matrix of dimensions *nind* x *ntime*.
 
 - *first_age*: the estimated age of each vulture during first capture. NAs indicate that the vulture was a subadult that could not be accurately aged. The NAs are imputed by using a submodel for age class. A vector of length *nind*.
 

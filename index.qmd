@@ -1,9 +1,9 @@
 ---
 output-dir: docs 
-title: "Gyps Vulture Survival Analysis and Postprocessing" 
+title: "Gyps Vulture Survival SUpplemental Materials" 
 author: "Brian W. Rolek" 
 email: "brianrolek at gmail dot com" 
-date: "14 May 2026" 
+date: "25 Sept 2026" 
 format: html 
 df-print: kable 
 editor: visual 
@@ -16,9 +16,9 @@ code-tools: true
 
 ## 1. Background
 
-This document provides R and Nimble code to implement multi-event capture-recapture analysis to estimate survival of *Gyps* vultures (African white-backed and Ruppells) in eastern Africa. Code is linked to the following manuscript:
-
-B. W. Rolek, L. Dunn, C. J. Kendall, C. J. W. McClure, S. Thomsett, D. Muteti, M. Z. Virani, E. R. Buechley, R. Buij. 2026. Low survival of *Gyps* vultures in eastern Africa coinciding with interventions to address poisoning.
+```{r}
+#| child: "README.md"
+```
 
 ## 2. Run survival models
 
@@ -66,7 +66,7 @@ We implemented the reduced model that only included significant covariates based
 
 ## 3. Model comparison
 
-We compared the predictive accuracy of models using WAIC. We didn't evaluate the code here because it has a long runttime. Instead, we load the results file to inspect the results. The waic.func() is a custom function that uses Nimble's calculateWAIC() to estimate WAIC values. This function is located in the functions.R file.
+We compared the predictive accuracy of models using WAIC. We didn't evaluate the code here because it has a long runtime. Instead, we load the results file to inspect the results. The waic.func() is a custom function that uses Nimble's calculateWAIC() to estimate WAIC values. This function is located in the functions.R file.
 
 ```{r}
 #| label: model comparison 1 
@@ -103,7 +103,7 @@ knitr::read_chunk('R/04-analysis-sensitivity.R')
 #| tbl-cap: "Table S2. Survival estimates when substituting observation state 2 with either 3, 4, or 5 to evaluate the sensitivity of models to misclassification. Survival here is presented as monthly survival."
 ```
 
-## 5. Postprocessing
+## 5. Postprocessing survival
 
 We created tables and figures from the reduced and global model outputs.
 
@@ -196,7 +196,7 @@ We plotted predictions of tag failure in response to year of study.
 #| column: page
 ```
 
-### 5.4 Survival by age class and study period
+### 5.4 Survival by study period
 
 We plotted predictions of survival by study period and compared to predictions of all study periods combined.
 
@@ -207,16 +207,33 @@ We plotted predictions of survival by study period and compared to predictions o
 #| fig-cap: "Figure S5. Predicted survival (yearly) by study period (A) and combined (B)."
 ```
 
-We printed a table and compared survival estimates between periods and combined.
-
 ```{r}
 #| label: survival estimates 
 #| eval: true 
 #| warning: false 
-#| tbl-cap: "Table S4. Yearly survival estimates."
-#| tbl-subcap: 
-#| - "(A) Survival during early, late, and combined periods." 
-#| - "(B) Differences in survival by age class."
+#| tbl-cap: "Table S4. Yearly survival estimates. Survival during early, late, and combined periods."
+```
+
+### 5.5 Survival differences by age class
+
+```{r}
+#| label: survival differences 
+#| eval: true 
+#| warning: false 
+#| tbl-cap: "Table S5. Compare survival differences by age class."
 #| layout-ncol: 1
 options(kableExtra.auto_format = FALSE)
+```
+
+## 6. Matrix population model
+
+```{r}
+#| include: false 
+knitr::read_chunk('R/06-matrix-pop-model.R')
+```
+
+```{r}
+#| label: mpm 
+#| eval: true 
+#| warning: false
 ```

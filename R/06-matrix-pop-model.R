@@ -1,3 +1,4 @@
+# ---- mpm
 ######################################################
 # Vulture Trends Matrix Model
 # Survival rates are for African white-backed and Ruppell's vultures
@@ -43,9 +44,14 @@ get_lambda <- function(x){
 runs <- c(1:length(s1)) # matrix indexed by number
 lambda_values <- lapply(runs, get_lambda)
 
-lam <- lambda_values |> unlist()
-exp(mean(log(lam))) # Geometric mean
-median(lam)
-hdi(lam)
-hist(lam)
-mean(lam<1) # probability of lambda <1
+# pop.growth rate contains the posterior draws of lambda
+# where one is a stable population
+pop.growth.rate <- lambda_values |> unlist() 
+paste0("Geometric mean population growth rate=",
+round(exp(mean(log(pop.growth.rate))), 3)) |> print() # Geometric mean
+
+paste0("Median=", round(median(pop.growth.rate),3)) |> print()
+paste0("95% HDIs=", round(hdi(pop.growth.rate),3)) |> print()
+hist(pop.growth.rate, main="Population growth rate")
+paste0("Probability of decline, i.e. lambda<1=",
+round(mean(pop.growth.rate<1),3)) |> print() # probability of lambda <1
