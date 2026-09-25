@@ -9,7 +9,7 @@ library (ggpubr)
 library (scales)
 options(scipen=999)
 load("data//data.RData")
-source("R//functions.R")
+source("R//01-functions.R")
 pars <- c(  "delta", "beta",
             "mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead",
             "l.s", "l.tagfail", "l.p.tagfail", "l.p.dead")
@@ -26,21 +26,40 @@ post.reduced <- do.call(rbind, postl.reduced)
 p3 <- MCMCpstr(postl.reduced, pars[-1], type="chains")
 p4 <- mcmc.list(postl.reduced)
 
-
 # Model diagnostics
 # ---- sumtoone
 sumtoone.func()
+# Check that survival priors ~dbeta(1,1) are 
+# not restricting inference of survival
+# For example, monthly survival must be very high to translate into
+# reasonable yearly survival estimates. 
+jpeg(filename = "./figs/histograms-of-survival.jpeg", 
+     res = 300, height=6, width =4, units="in")
+par(mfrow=c(4,2), mar=c(4,4,2,1))
+hist(rbeta(100000, 1, 1), 
+     xlab="Simulations from rbeta(1,1)", main="Visualization of priors" )
+hist(plogis(rnorm(10000, mean=6, sd=1)), 
+     xlab="Survival", main="Example of\nboundary issues " )
+hist(p3$mean.s[1,], xlab="Survival (Monthly)", main="First-year")
+hist(p3$mean.s[1,]^12, xlab="Survival (Yearly)", main="First-year")
+hist(p3$mean.s[2,], xlab="Survival (Monthly)", main="Subadult")
+hist(p3$mean.s[2,]^12, xlab="Survival (Yearly)", main="Subadult")
+hist(p3$mean.s[3,], xlab="Survival (Monthly)", main="Adult")
+hist(p3$mean.s[3,]^12, xlab="Survival (Yearly)", main="Adult")
+dev.off()
 # Check for convergence
 # Priors are depicted in red
 # ---- traceplots global
 iters <- ncol(p1$delta)
+# Priors of ~dnorm(mean = 0, sd = 10)
 MCMCtrace(postl.global, "delta", pdf=F, Rhat=T, 
           priors=rnorm(iters, 0, 10), post_zm = FALSE)
+# Priors of ~dnorm(mean = 0, sd = 10)
 MCMCtrace(postl.global, "beta", pdf=F, Rhat=T, 
-          priors=rnorm(iters, 0, 10), post_zm = FALSE)       
+          priors=rnorm(iters, 0, 10), post_zm = FALSE) 
+# Priors of ~dbeta(a = 1, b = 1)
 MCMCtrace(postl.global, c("mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead"), pdf=F, Rhat=T, 
           priors=rbeta(iters, 1, 1), post_zm = FALSE)  
-
 # ---- traceplots reduced
 iters <- ncol(p3$beta)
 MCMCtrace(postl.reduced, "beta", pdf=F, Rhat=T, 
@@ -92,10 +111,12 @@ MCMCplot(p2, params=c("mean.s", "mean.tagfail",
 #* on tag failure
 #* from reduced model
 #***************
+yrs.sc <- constl$year.cont[!duplicated(constl$year.cont)]
+names(yrs.sc) <- 2009:2024
 ta <- seq(0,5.3, by=0.1)
 ta.sc <- (ta-5.436775)/3.997963
 ni <- ncol(p3$beta)
-yrs <- c(-0.73, 0.46) # set to 2011 for early period and 2020 for late
+yrs <- c(-0.8667, 0.4667) # set to 2010 for early period and 2020 for late, roughly the midpoints
 pred.ta <- array(NA, dim=c(length(ta.sc),2,ni), 
                  dimnames=list(tagage=ta, period=c("Early", "Late"), iter=1:ni) )
 for (i in 1:length(ta.sc)){
@@ -140,9 +161,9 @@ pmta <- ggplot() + theme_minimal() +
 
 pyta
 pmta
-# ggsave("figs\\transmitter age and failure.tiff",
-#        pyta, device="tiff",
-#        width=6.5, height=4, units="in", dpi=300)
+ggsave("figs\\transmitter age and failure.tiff",
+       pyta, device="tiff",
+       width=6.5, height=4, units="in", dpi=300)
 # 
 # ggsave("figs\\transmitter age and failure-byMonth.tiff",
 #        pmta, device="tiff",
@@ -168,7 +189,9 @@ ni <- ncol(p3$beta)
 pred.tf.yr <- array(NA, dim=c(length(yr.sc), ni), 
                     dimnames=list(year=yr, iter=1:ni) )
 for (i in 1:length(yr.sc)){
-  pred.tf.yr[i,] <- p3$l.tagfail[1,] + p3$beta[1,]*-1.355 + p3$beta[2,]*yr.sc[i] 
+  pred.tf.yr[i,] <- p3$l.tagfail[1,] + 
+    p3$beta[1,]*-1.355 + # tag.age 
+    p3$beta[2,]*yr.sc[i] # yr.cont
 }
 lp.tf.yr <- as.data.frame.table(pred.tf.yr, responseName = "value") 
 lp.tf.yr$year <- as.numeric(as.character(lp.tf.yr$year))
@@ -243,12 +266,12 @@ ps2 <- lss |>
 ps3 <- lss |>
   ggplot(aes(x = value^12, y = Var1)) + 
   theme_minimal() +
-  scale_y_discrete(labels=c("", "", "")) +
+  scale_y_discrete(labels=c("First year", "Subadult", "Adult")) +
   stat_halfeye(.width=c(0.85, 0.95), point_interval="median_hdci") +
   ylab("") + xlab("Survival (yearly probability)") +
   xlim(0, 1) +
-  coord_flip() +
-  ggtitle("(B) Combined") 
+  coord_flip() 
+  #ggtitle("(B) Combined") 
 
 ni <- ncol(p1$delta)
 pred.man <- array(NA, dim=c(3, 2, ni), 
@@ -262,24 +285,31 @@ lp.man <- as.data.frame.table(pred.man, responseName = "value")
 colnames(lp.man)[1:3] <- c("Ageclass", "Period", "iter" )
 lp.man$pred <- plogis(lp.man$value)
 
-p4 <- ggplot(data=lp.man, aes(x=pred^12, y=Period)) + theme_minimal() +
-  geom_line(data=lp.man, aes(x=pred^12, y=Period, group=iter),
-            color="gray40", linewidth=0.5, alpha=0.025) +
-  stat_pointinterval(.width=c(0.85, 0.95), 
-                     point_interval ="median_hdci") +
+p4 <- ggplot(data=lp.man, aes(x=pred^12, y=Period)) + 
+  theme_minimal() +
+  # geom_line(data=lp.man, aes(x=pred^12, y=Period, group=iter),
+  #           color="gray40", linewidth=0.5, alpha=0.025) +
+  # stat_pointinterval(.width=c(0.85, 0.95), 
+  #                    point_interval ="median_hdci") +
+  stat_halfeye(.width=c(0.85, 0.95), point_interval="median_hdci") +
   facet_wrap(facets=vars(Ageclass)) + 
   xlim(0,1) +
   coord_flip() +
-  ylab("Period") + xlab("Survival (yearly probability)") +
-  ggtitle("(A) Period")
+  ylab("Period") + xlab("Survival (yearly probability)") 
+  #ggtitle("(A) Period")
 
 all_p <- ggarrange(p4, ps3, nrow=2)
 
 all_p
-# ggsave("figs\\survival-ageclass-period-combined.tiff",
-#        all_p, device="jpeg", 
-#        width=6, height=6, units="in", dpi=300)
-
+ggsave("figs\\survival-ageclass-period-combined.tiff",
+       all_p, device="jpeg",
+       width=6, height=6, units="in", dpi=300)
+ggsave("figs\\survival-ageclass-combined.tiff",
+       ps3, device="jpeg",
+       width=6, height=4, units="in", dpi=300)
+ggsave("figs\\survival-ageclass-period.tiff",
+       p4, device="jpeg",
+       width=6, height=4, units="in", dpi=300)
 # ---- survival estimates 
 # survival by age class
 # and management period

@@ -128,7 +128,7 @@ run <- function(seed, datl, constl, code){
   library('nimble')
   library('coda')
   library('nimbleEcology')
-  source("R/functions.R")
+  source("R/01-functions.R")
   
   inits <- function(){ list(beta = rnorm(2,0,0.5),
                             mean.s = runif(3,0,1), 
@@ -251,7 +251,7 @@ post.sens23 <- post1
 p23 <- MCMCpstr(post1, pars[-1], type="chains")
 
 iters <- ncol(p23$beta)
-sum95.sens23 <- MCMCsummary(post.sens23, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
+sum95.sens23 <- MCMCsummary(post.sens23, pars[-c(1,7:10)], HPD=TRUE, digits=3, 
                             hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
 coef.est.sens23 <- data.frame(Model="State 2 to 3",
                               Parameter= rownames(sum95.sens23),
@@ -265,7 +265,7 @@ coef.est.sens23 <- data.frame(Model="State 2 to 3",
 post.sens24 <- post2
 p24 <- MCMCpstr(post2, pars[-1], type="chains")
 iters <- ncol(p24$beta)
-sum95.sens24 <- MCMCsummary(post.sens24, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
+sum95.sens24 <- MCMCsummary(post.sens24, pars[-c(1,7:10)], HPD=TRUE, digits=3, 
                             hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
 coef.est.sens24 <- data.frame( Model= "State 2 to 4",
                                Parameter= rownames(sum95.sens24),
@@ -279,7 +279,7 @@ coef.est.sens24 <- data.frame( Model= "State 2 to 4",
 post.sens25 <- post3
 p25 <- MCMCpstr(post3, pars[-1], type="chains")
 iters <- ncol(p25$beta)
-sum95.sens25 <- MCMCsummary(post.sens25, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
+sum95.sens25 <- MCMCsummary(post.sens25, pars[-c(1,7:10)], HPD=TRUE, digits=3, 
                             hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
 coef.est.sens25 <- data.frame(Model= "State 2 to 5",
                               Parameter= rownames(sum95.sens25),
@@ -292,10 +292,13 @@ coef.est.sens25 <- data.frame(Model= "State 2 to 5",
 )
 
 load("outputs\\gyps-28Apr2026-marginalized-reduced.RData")
+pars <- c(  "beta",  
+            "mean.s", "mean.tagfail", "mean.p.tagfail", "mean.p.dead",
+            "l.s", "l.tagfail", "l.p.tagfail", "l.p.dead")
 post.sens.red <- lapply(post, function(x){ x$samples })
 pr <- MCMCpstr(post.sens.red, pars, type="chains")
 iters <- ncol(pr$beta)
-sum95.sens.r <- MCMCsummary(post.sens.red, pars[-c(1,7:10)], HPD=TRUE, digits=2, 
+sum95.sens.r <- MCMCsummary(post.sens.red, pars[-c(1,7:10)], HPD=TRUE, digits=3, 
                             hpd_prob=0.95, pg0=TRUE, func=median, func_name="md")
 coef.est.reduced <- data.frame(Model= "Reduced",
                               Parameter= rownames(sum95.sens.r),
@@ -314,5 +317,5 @@ df.sens.tab <- rbind(coef.est.sens23[1:3,1:6],
                     coef.est.reduced[1:3,1:6])
 df.sens.tab[,3:6] <- df.sens.tab[,3:6] |> round(3)
 df.sens.tab
-# write.csv(file= "C:\\Users\\rolek.brian\\OneDrive - The Peregrine Fund\\Documents\\GitHub\\Gyps Vulture Survival in Africa\\docs\\sensitivity-table.csv", 
-#           df.compare)
+# write.csv(file= "docs\\sensitivity-table.csv",
+#           df.sens.tab)

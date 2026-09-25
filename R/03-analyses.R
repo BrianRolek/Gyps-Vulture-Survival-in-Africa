@@ -161,7 +161,7 @@ inits <- function(){ list(beta = rnorm(2,0,0.5),
 run <- function(seed, datl, constl, code, inits){
   library('nimble')
   library('nimbleEcology')
-  source("R/functions.R")
+  source("R/01-functions.R")
   
   
   pars <- c(  "beta", 
