@@ -1,0 +1,70 @@
+"","UnitID","Dataset","Species","CauseOfMortality","Age","Stage","Age2","Sex","DaysWithTransmitter","Manage","CountryWhereDied","DateAdded","DateOfMortality","Censored","DateOfLoss-last activity","WhereTrapped","include","rehabbed","taglost","founddead","UncertainFateTag","Region","justification","Notes","Notes details"
+"1","2017","Kendall","RUVU",NA,"Adult","Adult","6",NA,"247","No",NA,2010-10-16,NA,"Y",2011-06-20,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"2","2018","Kendall","RUVU",NA,"Adult","Adult","6",NA,"185","No",NA,2010-10-17,NA,"Y",2011-04-20,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"3","151329","Kendall","WBV",NA,"Adult","Adult","6",NA,"87","No",NA,2010-05-03,NA,"Y",2010-07-29,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"4","AG082","Kendall","WBV",NA,"Adult","Adult","6",NA,"370","No",NA,2009-07-06,NA,"Y",2010-07-11,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"5","AG083","Kendall","WBV","Unknown","Adult","Adult","6",NA,"284","No","Tanzania",2009-07-06,2010-04-16,"N",2010-04-16,"MMNR",TRUE,FALSE,FALSE,TRUE,FALSE,"N",NA,"Unit was moved after death, suggesting human intervention possibly in death; location of death never checked and unit never recovered",NA
+"6","AG084","Kendall","RUVU",NA,"Adult","Adult","6",NA,"359","No",NA,2009-07-08,NA,"Y",2010-07-02,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"7","AG085","Kendall","RUVU",NA,"Adult","Adult","6",NA,"265","No",NA,2009-07-31,NA,"Y",2010-04-22,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"8","AG088","Kendall","WBV",NA,"Adult","Adult","6",NA,"299","No",NA,2009-07-09,NA,"Y",2010-05-04,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"9","AG089","Kendall","WBV",NA,"Adult","Adult","6",NA,"344","No",NA,2009-07-09,NA,"Y",2010-06-18,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"10","AG092","Kendall","RUVU",NA,"Adult","Adult","6",NA,"240","No",NA,2009-07-13,NA,"Y",2010-03-10,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"11","AG096","Kendall","WBV",NA,"2nd year","Subadult","1",NA,"315","No",NA,2009-08-07,NA,"Y",2010-06-18,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"12","AG097","Kendall","RUVU",NA,"Adult","Adult","6",NA,"95","No",NA,2009-07-13,NA,"Y",2009-10-16,"MMNR",TRUE,FALSE,TRUE,FALSE,FALSE,"N",NA,"Unit failed",NA
+"13","Ag432","Kendall","WBV",NA,"Subadult","Subadult","NA",NA,"214","No",NA,2010-06-15,NA,"Y",2011-01-15,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"14","ST2010-1043","Kendall","RUVU",NA,"Adult","Adult","6",NA,"264","No",NA,2010-07-29,NA,"Y",2011-04-19,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"15","ST2010-1044","Kendall","RUVU",NA,"Adult","Adult","6",NA,"282","No",NA,2010-07-29,NA,"Y",2011-05-07,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"16","ST2010-1045","Kendall","RUVU",NA,"Adult","Adult","6",NA,"249","No",NA,2010-07-31,NA,"Y",2011-04-06,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"17","ST2010-1046","Kendall","RUVU",NA,"Adult","Adult","6",NA,"257","No",NA,2010-07-29,NA,"Y",2011-04-12,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"18","ST2010-1048_2","Kendall","WBV",NA,"Adult","Adult","6",NA,"260","No",NA,2010-10-18,NA,"Y",2011-07-05,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"19","ST2010-1050","Kendall","RUVU",NA,"Adult","Adult","6",NA,"269","No",NA,2010-08-08,NA,"Y",2011-05-04,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"20","ST2010-1051","Kendall","RUVU",NA,"Subadult","Subadult","NA",NA,"243","No",NA,2010-08-08,NA,"Y",2011-04-08,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"21","ST2010-1052","Kendall","WBV",NA,"Adult","Adult","6",NA,"267","No",NA,2010-08-09,NA,"Y",2011-05-03,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"22","ST2010-1053","Kendall","WBV",NA,"2nd year","Subadult","1",NA,"283","No",NA,2010-08-10,NA,"Y",2011-05-20,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"23","ST2010-1054","Kendall","WBV",NA,"2nd year","Subadult","1",NA,"69","No",NA,2010-08-10,NA,"Y",2010-10-18,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"24","ST2010-1056","Kendall","RUVU",NA,"2nd year","Subadult","1",NA,"226","No",NA,2010-08-28,NA,"Y",2011-04-11,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"25","ST2010-1057","Kendall","WBV",NA,"Adult","Adult","6",NA,"94","No",NA,2010-08-29,NA,"Y",2010-12-01,"MMNR",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"26","171605 (Matira)","Virani","WBV","Poisoned","Adult","Adult","6",NA,"503","Yes",NA,2017-11-17,2019-04-04,"N",2019-04-04,"Masai Mara",TRUE,FALSE,FALSE,TRUE,FALSE,"N",NA,NA,NA
+"27","171609 (Charlie)","Virani","WBV","POISONED","Adult","Adult","6",NA,"621","Yes",NA,2018-01-16,2019-09-29,"N",2019-09-29,"Naboisho Conservancy",TRUE,FALSE,FALSE,TRUE,FALSE,"N",NA,NA,NA
+"28","171611 (Porini)","Virani","WBV","Powerline Collision","3rd year","Subadult","2",NA,"217","Yes",NA,2018-02-22,2018-09-27,"N",2018-09-27,"Ol Kinyei Conservancy",TRUE,FALSE,FALSE,TRUE,FALSE,"N",NA,NA,NA
+"29","171610 (Kinyei)","Virani","RUVU","Unknown - Possible Powerline","4th year","Subadult","3",NA,"373","Yes",NA,2018-02-22,2019-03-02,"N",2019-03-02,"Ol Kinyei Conservancy",TRUE,FALSE,FALSE,TRUE,FALSE,"N",NA,NA,NA
+"30","171604/adWBV05","Virani","WBV",NA,"Adult","Adult","6",NA,"723","Yes",NA,2018-03-11,NA,"Y",2022-12-16,"Naboisho Conservancy",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"31","171608/adWBV06","Virani","WBV",NA,"Adult","Adult","6",NA,"722","Yes",NA,2018-03-11,NA,"Y",2023-07-13,"Naboisho Conservancy",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"32","171612 (Olarro)","Virani","WBV",NA,"Adult","Adult","6",NA,"626","Yes",NA,2018-06-14,NA,"Y",2022-01-22,"Naboisho Conservancy",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"33","171613 (Tipilikwani)","Virani","WBV",NA,"Adult","Adult","6",NA,"625","Yes",NA,2018-06-15,NA,"Y",2021-07-01,"Naboisho Conservancy",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"34","171606 (Ilkeliani)","Virani","WBV",NA,"Adult","Adult","6",NA,"625","Yes",NA,2018-06-15,NA,"Y",2021-04-28,"Naboisho Conservancy",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"35","171611 (Soysambu/adRV01)","Virani","RUVU","Poisoned","Adult","Adult","6",NA,"109","Yes",NA,2019-02-26,2019-06-15,"N",2019-06-15,"Soysambu Conservancy",TRUE,FALSE,FALSE,TRUE,FALSE,"N",NA,NA,NA
+"36","pfs1809","Virani","WBV",NA,"Subadult","Subadult","NA",NA,"526","Yes",NA,2018-09-22,NA,"Y",2020-12-21,"The Wild Life Foundation, Athi River",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"37","pfs1808","Virani","WBV",NA,"Adult","Adult","6",NA,"526","Yes",NA,2018-09-22,NA,"Y",2021-02-11,"The Wild Life Foundation, Athi River",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"38","Pfs1810","Virani","WBV",NA,"Adult","Adult","6",NA,"527","Yes",NA,2018-09-20,NA,"Y",2023-02-03,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"39","Pfs 1806","Virani","WBV",NA,"3-4th year","Subadult","2",NA,"527","Yes",NA,2018-09-21,NA,"Y",2023-10-18,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,FALSE,FALSE,"N",NA,NA,NA
+"40","Pfs 1807","Virani","WBV",NA,"Adult","Adult","6",NA,"527","Yes",NA,2018-09-21,NA,"Y",2023-10-28,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,FALSE,FALSE,"N",NA,NA,NA
+"41","Pfs 1804","Virani","WBV",NA,"Adult","Adult","6",NA,"527","Yes",NA,2018-09-21,NA,"Y",2021-01-19,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"42","Pfs 1902","Virani","WBV",NA,"Adult","Adult","6",NA,"364","Yes",NA,2019-03-11,NA,"Y",2021-01-10,"NA",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"43","182848","Buij","WBV",NA,"2nd year","Subadult","1",NA,"1054","Yes",NA,2021-11-19,2024-10-08,"N",2024-10-08,"Soysambu Conservancy",TRUE,TRUE,FALSE,TRUE,FALSE,"N",NA,"rehabilitated bird","2YR bird rescued on 12 November 2021 at the mass poisoning event in Olgilului, Amboseli at GPS -2.5489590, 37.0063420. Was released in Soysambu Conservancy at GPS -0.502944, 36.220926 on 19 November 2021 at ~11:00."
+"44","192089","Buij","WBV",NA,"3rd year","Subadult","2",NA,"156","Yes",NA,2021-08-30,NA,"Y",2022-02-02,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"45","192090","Buij","WBV",NA,"Adult","Adult","6",NA,"835","Yes",NA,2020-02-25,NA,"Y",2022-06-09,"Masai Mara",TRUE,TRUE,FALSE,FALSE,TRUE,"N",NA,"rehabilitated bird","Rescued on the 8th of February 2020 from a poisoning near Talek at GPS coordinates -1.399183, 35.224335. Released on the 25th of February 2020 from Olderkesi Conservancy by Jamie Manuel and Nathan Kipees."
+"46","192096","Buij","RUVU",NA,"Subadult","Subadult","NA",NA,"110","Yes",NA,2019-11-25,NA,"Y",2020-03-14,"Masai Mara",TRUE,TRUE,FALSE,FALSE,TRUE,"N",NA,"rehabilitated bird","Subadult bird rescued at the pass poisoning event in Ol Kinyei Conservancy on 14/11/2019. Rehabbed by Jamie and Nathan. Released in Olderkesi on 25/11/2019."
+"47","192097","Buij","WBV","unknown","Adult","Adult","6",NA,"89","Yes","Kenya",2021-08-30,2021-11-27,"N",2021-11-27,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,TRUE,FALSE,"N",NA,NA,NA
+"48","192098","Buij","WBV","Likely poisoned","Adult","Adult","6",NA,"979","Yes","Kenya",2020-12-02,2023-08-08,"N",2023-08-08,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,TRUE,FALSE,"N",NA,NA,NA
+"49","192099","Buij","RUVU",NA,"Adult","Adult","6",NA,"1186","Yes",NA,2021-08-30,2024-11-28,"Y",2024-11-28,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,TRUE,FALSE,"N",NA,NA,NA
+"50","192101","Buij","WBV",NA,"Adult","Adult","6",NA,"1029","Yes",NA,2020-12-02,NA,"Y",2023-09-27,"Athi River Game Ranching Ltd",TRUE,FALSE,TRUE,FALSE,FALSE,"N",NA,NA,NA
+"51","192102","Buij","RUVU",NA,"Adult","Adult","6",NA,"285","Yes",NA,2020-12-01,NA,"Y",2021-09-12,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,FALSE,TRUE,"N",NA,NA,NA
+"52","192104","Buij","WBV",NA,"1st year","1st year","0",NA,"1007","Yes",NA,2021-11-19,NA,"Y",2024-08-22,"Soysambu Conservancy",TRUE,TRUE,FALSE,FALSE,FALSE,"N",NA,"rehabilitated bird","Juv bird rescued on 12 November 2021 at the mass poisoning event in Olgilului, Amboseli at GPS -2.5489590, 37.0063420. Was released in Soysambu Conservancy at GPS -0.502944, 36.220926 on 19 November 2021 at ~11:00"
+"53","192106","Buij","RUVU",NA,"Adult","Adult","6",NA,"1303","Yes",NA,2020-12-02,NA,"Y",2024-06-27,"Athi River Game Ranching Ltd",TRUE,FALSE,TRUE,FALSE,FALSE,"N",NA,NA,NA
+"54","200601","Buij","WBV",NA,"Adult","Adult","6",NA,"369","Yes",NA,2021-06-08,NA,"Y",2022-06-12,"Olerai",TRUE,TRUE,FALSE,FALSE,TRUE,"N",NA,"rehabilitated bird","Olerai"
+"55","200603","Buij","WBV",NA,"Subadult","Subadult","NA",NA,"1142","Yes",NA,2021-12-02,NA,"Y",2025-01-17,"Naboisho Conservancy",TRUE,TRUE,FALSE,FALSE,FALSE,"N",NA,"rehabilitated bird","naboisho"
+"56","200604","Buij","WBV",NA,"2nd year","1st year","0",NA,"973","Yes",NA,2021-01-17,NA,"Y",2023-09-17,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,FALSE,FALSE,"N",NA,NA,NA
+"57","200607","Buij","WBV",NA,"1st year","1st year","0",NA,"1462","Yes",NA,2021-01-16,NA,"Y",2025-01-17,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,FALSE,FALSE,"N",NA,NA,NA
+"58","202888","Buij","RUVU",NA,"Adult","Adult","6",NA,"748","Yes",NA,2021-11-19,NA,"Y",2023-12-07,"Soysambu Conservancy",TRUE,TRUE,TRUE,FALSE,FALSE,"N",NA,"rehabilitated bird","Adult bird rescued on 12 November 2021 at the mass poisoning event in Olgilului, Amboseli at GPS -2.5489590, 37.0063420. Was released in Soysambu Conservancy at GPS -0.502944, 36.220926 on 19 November 2021 at ~11:00."
+"59","213828","Buij","WBV",NA,"Adult","Adult","6",NA,"216","Yes",NA,2022-11-09,NA,"Y",2023-06-13,"Masai Mara",TRUE,TRUE,FALSE,FALSE,TRUE,"N",NA,"rehabilitated bird","Adult bird was rescued on the 19th of October at -1.58973 and 35.46346. Presumed poisoned with Furadan as purple coloring was found on leg. Bird was released on the 9th of November around midday in Olderkesi at the Cottar's airstrip."
+"60","213832","Buij","WBV",NA,"Adult","Adult","6",NA,"977","Yes",NA,2021-08-29,NA,"Y",2024-05-02,"Athi River Game Ranching Ltd",TRUE,FALSE,FALSE,FALSE,FALSE,"N",NA,NA,NA
+"61","213833","Buij","WBV",NA,"1st year","1st year","0",NA,"166","Yes",NA,2022-06-28,NA,"Y",2022-12-11,"Soysambu Conservancy",TRUE,TRUE,FALSE,FALSE,TRUE,"N",NA,"rehabilitated bird","Juv bird rescued on the 25th of May 2022. Presumed to have prematurely fledged. Was released on the 28th of June 2022 in Soysambu, Nakuru."
+"62","213834","Buij","WBV","unknown","1st year","1st year","0",NA,"54","Yes","Kenya",2022-11-09,2023-01-02,"N",2023-01-02,"Masai Mara",TRUE,TRUE,FALSE,TRUE,FALSE,"N",NA,"rehabilitated bird","Freshly fledged juvenile bird was rescued very weak under its nest on the 24th of August at Crocodile Camp close to Talek. Bird was released on the 9th of November around midday in Olderkesi at the Cottar's airstrip."
+"63","213837","Buij","RUVU","Likely poisoned","1st year","1st year","0",NA,"44","Yes","Kenya",2022-06-28,2022-08-06,"N",2022-08-11,"Soysambu Conservancy",TRUE,TRUE,FALSE,TRUE,FALSE,"N",NA,"rehabilitated bird","Freshly fledged juvenile rescued starved close to Limuru town at GPS -1.1586086, 36.6483257 on 25 April 2022. Bird was released in Soysambu Conservancy on 02 July 2022 at approx. 13:00 at GPS -0.50320, 36.21964."
+"64","192100","Buij","WBV","Poisoned","Adult","Adult","6",NA,"678","Yes","Kenya",2020-11-08,2021-07-06,"N",2022-09-17,"Olerai",TRUE,TRUE,FALSE,TRUE,FALSE,"N",NA,"rehabilitated bird","Adult was presumed to have been poisoned. Was released on the 8th of November 2020 at Olerai Conservancy in Kajiado."
+"65","5114","Buij","WBV",NA,"1st year","1st year","0",NA,"620","Yes",NA,2019-11-25,NA,"Y",2021-08-06,"Masai Mara",TRUE,TRUE,FALSE,FALSE,TRUE,"N",NA,"rehabilitated bird","White-backed Vulture 01 (Ol Kinyei poisoning)"
+"66","213819","Buij","WBV",NA,"Adult","Adult","6",NA,"485","Yes",NA,2023-09-20,NA,NA,2025-01-17,"Olerai",TRUE,TRUE,FALSE,FALSE,FALSE,"N",NA,"rehabilitated bird",NA
+"67","200608","Buij","RUVU",NA,"1st year","1st year",NA,NA,"414","Yes",NA,2023-12-01,NA,NA,2025-01-18,"Masai Mara",TRUE,TRUE,FALSE,FALSE,FALSE,"N",NA,"rehabilitated bird",NA
+"68","202891","Buij","WBV",NA,"1st year","1st year",NA,NA,"123","Yes",NA,2023-12-01,NA,NA,2024-11-01,"Masai Mara",TRUE,TRUE,FALSE,FALSE,FALSE,"N",NA,"rehabilitated bird",NA
+"69","213823","Buij","WBV",NA,"Adult","Adult",NA,NA,"123","Yes",NA,2024-09-16,NA,NA,2025-01-17,"Masai Mara",TRUE,TRUE,FALSE,FALSE,FALSE,"N",NA,"rehabilitated bird",NA

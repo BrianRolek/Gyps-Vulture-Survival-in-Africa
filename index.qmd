@@ -1,6 +1,6 @@
 ---
 output-dir: docs 
-title: "Gyps Vulture Survival SUpplemental Materials" 
+title: "Gyps Vulture Survival Supplemental Materials" 
 author: "Brian W. Rolek" 
 email: "brianrolek at gmail dot com" 
 date: "25 Sept 2026" 
