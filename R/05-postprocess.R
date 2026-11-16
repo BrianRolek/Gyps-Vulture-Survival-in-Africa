@@ -7,6 +7,7 @@ library (tidybayes)
 library (bayestestR)
 library (ggpubr)
 library (scales)
+library (GGally)
 options(scipen=999)
 load("data//data.RData")
 source("R//01-functions.R")
@@ -107,6 +108,45 @@ MCMCplot(p2, params=c("mean.s", "mean.tagfail",
          HPD=TRUE, ci=c(85, 95))
 
 # ---- tag failure age
+#*********************
+#* How correlated are tag age and year of study
+#* Collinearity check
+#*********************
+t.nms <- c(2009+6/12)
+for (t in 2:constl$ntime){
+  t.nms[t] <- t.nms[t-1] + 1/12
+}
+t.nms <- round(t.nms,2)
+tag.age.sc <- array(NA, dim=dim(datl$y), 
+                    dimnames=list(ind=dimnames(datl$y)[[1]], 
+                                  year=t.nms) )
+for (i in 1:constl$nind){
+  for (t in constl$f[i]:constl$ntime){
+  tag.age.sc[i, t] <- constl$tag.age.sc[i, t]
+  }}
+
+lta <- melt(tag.age.sc)
+colnames(lta)[3] <- c("tag.age.sc")
+lyr <- as.data.frame(cbind(year.sc=constl$year.cont, 
+                           year=t.nms))
+longdf <- merge(lta, lyr, 
+                by.x="year", by.y="year", all.x=TRUE)
+longdf <- longdf[as.numeric(longdf$year)<=2011 | 
+                   as.numeric(longdf$year)>=2017,]
+longdf2 <- longdf[, c("tag.age.sc", "year.sc")]
+yr.tag.cor <- ggpairs(longdf2, lower = list(continuous=wrap("points", 
+                        position=position_jitter(height=0.25, width=0.25),
+                        alpha=0.1)) )
+yr.tag.cor
+ggsave("figs\\correlations-year-tagage.tiff",
+       yr.tag.cor, device="tiff",
+       width=6.5, height=4, units="in", dpi=300)
+
+# Examine sample sizes
+sub.longdf <- longdf[(!is.na(longdf$tag.age.sc) | 
+                        !is.na(longdf$year.sc)),  ]
+dim(sub.longdf)
+
 #***************
 #* Plot effect from tag age 
 #* on tag failure
@@ -127,6 +167,8 @@ pred.ta[i,j,] <- p3$l.tagfail[1,] + p3$beta[1,]*ta.sc[i] + p3$beta[2,]*yrs[j]
 lp.ta <- as.data.frame.table(pred.ta, responseName = "value") 
 lp.ta$tagage <- as.numeric(as.character(lp.ta$tagage))
 lp.ta$pred <- plogis(lp.ta$value)
+lp.ta <- lp.ta[!(lp.ta$period=="Early" & lp.ta$tagage>1),]
+
 md <- plogis(apply(pred.ta, c(1,2), median, na.rm=T))
 lhdi95 <- plogis(apply(pred.ta, c(1,2), HDInterval::hdi, na.rm=T)[1,,])
 uhdi95 <- plogis(apply(pred.ta, c(1,2), HDInterval::hdi, na.rm=T)[2,,])
@@ -139,7 +181,40 @@ df <- data.frame(md=c(md[,1], md[,2]),
                  uhdi85=c(uhdi85[,1], uhdi85[,2]),
                  ta=c(ta, ta),
                  period=c(rep("Early", length(ta)), rep("Late", length(ta))) )
+df <- df[!(df$period=="Early" & df$ta>1),]
+# Reformat tag.age data and combine with presumed tag failures
+tag.age.dat <- constl$tag.age.sc*3.997963 + 5.436775
+for (i in 1:nrow(tag.age.dat)){
+  t.end <- ifelse(constl$last[i]+1>constl$ntime, 
+                  constl$ntime, constl$last[i]+1) 
+  if (t.end != constl$ntime) {
+  tag.age.dat[i, t.end:constl$ntime] <- NA
+  }
+  if (constl$f[i]>1){
+  tag.age.dat[i, 1:constl$f[i]] <- NA
+  }
+  }
+ta.dat <- melt(tag.age.dat)
+ta.dat <- ta.dat[!is.na(ta.dat$value), ]
+y.dat <- melt(datl$y)
+y.dat$tag.fail <- ifelse(y.dat$value %in% c(2,4), 1, 
+                       ifelse(y.dat$value %in% c(1,3), 0, 
+                              ifelse(y.dat$value ==5, 2, NA)))
+tf.dat <- merge(ta.dat, y.dat, by = c("Var1", "Var2"))
 
+colnames(tf.dat) <- c("id", "year_month", "tagage", "obs.state", "tag.fail")
+tf.dat$year <- substr(tf.dat$year_month, 2, 5)
+tf.dat$month <- substr(tf.dat$year_month, 7,
+                       nchar( as.character(tf.dat$year_month))) |>
+  as.numeric()
+tf.dat$year.frac <- as.numeric(tf.dat$year) + (tf.dat$month-1)/12
+tf.dat$year.sc <- (tf.dat$year.frac-2016)/7
+
+tf.dat <- tf.dat[!tf.dat$year %in% 2012:2016, ]
+tf.dat <- tf.dat[tf.dat$tagage < 7, ]
+tf.dat$period <- ifelse(tf.dat$year<=2012, "Early", "Late")
+tf.dat <- tf.dat[!(tf.dat$tagage >2 & tf.dat$period=="Early"), ]
+  
 pyta <- ggplot() + theme_minimal() +
   geom_line(data=lp.ta, aes(x=tagage, y=1-((1-pred)^12), group=iter),
             color="gray40", linewidth=0.5, alpha=0.05) +
@@ -147,8 +222,17 @@ pyta <- ggplot() + theme_minimal() +
   geom_line(data=df, aes(x=ta, y=1-((1-md)^12)), linewidth=1) +
   geom_line(data=df, aes(x=ta, y=1-((1-lhdi95)^12)), linewidth=0.5, linetype="dashed") +
   geom_line(data=df, aes(x=ta, y=1-((1-uhdi95)^12)), linewidth=0.5, linetype="dashed") +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==2,], 
+           aes(jitter(tagage, factor=2)), 
+           alpha= 0.9, sides = "t", color="blue")  +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==0,], 
+           aes(jitter(tagage, factor=2)), 
+           alpha= 0.1, sides = "b")  +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==1,], 
+           aes(jitter(tagage, factor=2)), 
+           alpha= 0.7, sides = "t", color="red", linewidth=1.1)  +
   ylab("Transmitter failure (yearly probability)") + xlab("Transmitter age (years)") +
-  facet_wrap("period")
+  facet_wrap("period", scales="free_x")
 
 pmta <- ggplot() + theme_minimal() +
   geom_line(data=lp.ta, aes(x=tagage, y=pred, group=iter),
@@ -156,19 +240,28 @@ pmta <- ggplot() + theme_minimal() +
   geom_line(data=df, aes(x=ta, y=md), linewidth=1) +
   geom_line(data=df, aes(x=ta, y=lhdi95), linewidth=0.5, linetype="dashed") +
   geom_line(data=df, aes(x=ta, y=uhdi95), linewidth=0.5, linetype="dashed") +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==2,], 
+           aes(jitter(tagage, factor=2)), 
+           alpha= 0.9, sides = "t", color="blue")  +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==0,], 
+           aes(jitter(tagage, factor=2)), 
+           alpha= 0.1, sides = "b")  +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==1,], 
+           aes(jitter(tagage, factor=2)), 
+           alpha= 0.7, sides = "t", color="red", linewidth=1.1)  +
   ylab("Transmitter failure (monthly probability)") + xlab("Transmitter age (years)") +
-  facet_wrap("period")
-
+  facet_wrap("period", scales="free_x")
 
 pyta
 pmta
 ggsave("figs\\transmitter age and failure.tiff",
        pyta, device="tiff",
        width=6.5, height=4, units="in", dpi=300)
+
 # ---- saveplots3
-# ggsave("figs\\transmitter age and failure-byMonth.tiff",
-#        pmta, device="tiff",
-#        width=6.5, height=4, units="in", dpi=300)
+ggsave("figs\\transmitter age and failure-byMonth.tiff",
+       pmta, device="tiff",
+       width=6.5, height=4, units="in", dpi=300)
 
 df2 <- data.frame(early.md = (1-((1-md)^12))[,1],
                   early.lhdi95= (1-((1-lhdi95)^12))[,1],
@@ -177,7 +270,7 @@ df2 <- data.frame(early.md = (1-((1-md)^12))[,1],
                   late.lhdi95= (1-((1-lhdi95)^12))[,2],
                   late.uhdi95= (1-((1-uhdi95)^12))[,2]
 )
-# df2 |> round(2)
+#df2 |> round(2)
 
 # ---- tag failure year
 #***************
@@ -197,9 +290,9 @@ for (i in 1:length(yr.sc)){
 lp.tf.yr <- as.data.frame.table(pred.tf.yr, responseName = "value") 
 lp.tf.yr$year <- as.numeric(as.character(lp.tf.yr$year))
 lp.tf.yr$pred <- plogis(lp.tf.yr$value)
-lp.tf.yr <- lp.tf.yr[ (lp.tf.yr$year>=2009 & lp.tf.yr$year<=2011) |
-                        (lp.tf.yr$year>=2017 & lp.tf.yr$year<=2024),  ]
-lp.tf.yr$Period <- factor(ifelse(lp.tf.yr$year<=2011, "Early", "Late"), 
+lp.tf.yr <- lp.tf.yr[ (lp.tf.yr$year>=2009.5 & lp.tf.yr$year<=2011.5) |
+                        (lp.tf.yr$year>=2017.9 & lp.tf.yr$year<=2025),  ]
+lp.tf.yr$period <- factor(ifelse(lp.tf.yr$year<=2012, "Early", "Late"), 
                           levels=c("Early", "Late"))
 md <- plogis(apply(pred.tf.yr, 1, median, na.rm=T))
 lhdi95 <- plogis(apply(pred.tf.yr, 1, HDInterval::hdi, na.rm=T)[1,])
@@ -211,10 +304,10 @@ df <- data.frame(md=md,
                  lhdi85=lhdi85, uhdi85=uhdi85,
                  yr=yr, 
                  md12= 1-((1-md)^12) )
-sub.df <- (df$yr >=2009 & df$yr<=2011) |
-  (df$yr>=2017 & df$yr<=2024)
+sub.df <- (df$yr >=2009.5 & df$yr<=2011.5) |
+  (df$yr>=2017.9 & df$yr<=2025)
 df <- df[sub.df, ]  
-df$Period <- factor(ifelse(df$yr<=2011, "Early", "Late"), 
+df$period <- factor(ifelse(df$yr<=2012, "Early", "Late"), 
                     levels=c("Early", "Late"))
 
 pyty <- ggplot() + theme_minimal() +
@@ -223,9 +316,18 @@ pyty <- ggplot() + theme_minimal() +
   geom_line(data=df, aes(x=yr, y=1-((1-md)^12)), linewidth=1) +
   geom_line(data=df, aes(x=yr, y=1-((1-lhdi95)^12)), linewidth=0.5, linetype="dashed") +
   geom_line(data=df, aes(x=yr, y=1-((1-uhdi95)^12)), linewidth=0.5, linetype="dashed") +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==2,], 
+           aes(jitter(year.frac, factor=2)), 
+           alpha= 0.9, sides = "t", color="blue")  +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==0,], 
+           aes(jitter(year.frac, factor=2)), 
+           alpha= 0.1, sides = "b")  +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==1,], 
+           aes(jitter(year.frac, factor=2)), 
+           alpha= 0.7, sides = "t", color="red", linewidth=1.1)  +
   ylab("Transmitter failure (yearly probability)") + xlab("Year of study") +
-  scale_x_continuous(breaks=c(2009:2011, 2018, 2020, 2022, 2024)) +
-  facet_wrap("Period", scales="free_x")
+  scale_x_continuous(breaks=c(2009:2012, 2018, 2020, 2022, 2024)) +
+  facet_wrap("period", scales="free_x")
 
 pmty <- ggplot() + theme_minimal() +
   geom_line(data=lp.tf.yr, aes(x=year, y=pred, group=iter),
@@ -233,20 +335,29 @@ pmty <- ggplot() + theme_minimal() +
   geom_line(data=df, aes(x=yr, y=md), linewidth=1) +
   geom_line(data=df, aes(x=yr, y=lhdi95), linewidth=0.5, linetype="dashed") +
   geom_line(data=df, aes(x=yr, y=uhdi95), linewidth=0.5, linetype="dashed") +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==2,], 
+           aes(jitter(year.frac, factor=2)), 
+           alpha= 0.9, sides = "t", color="blue")  +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==0,], 
+           aes(jitter(year.frac, factor=2)), 
+           alpha= 0.1, sides = "b")  +
+  geom_rug(data = tf.dat[tf.dat$tag.fail==1,], 
+           aes(jitter(year.frac, factor=2)), 
+           alpha= 0.7, sides = "t", color="red", linewidth=1.1)  +
   ylab("Transmitter failure (monthly probability)") + xlab("Year of study") +
-  scale_x_continuous(breaks=c(2009:2011, 2018, 2020, 2022, 2024)) +
-  facet_wrap("Period", scales="free_x")
+  scale_x_continuous(breaks=c(2009:2012, 2018, 2020, 2022, 2024)) +
+  facet_wrap("period", scales="free_x")
 
 pyty
 pmty
 # ---- saveplots2 
-# ggsave("figs\\tagfailure-year.tiff",
-#        pyty, device="tiff", 
-#        width=6.5, height=4, units="in", dpi=300)
-# 
-# ggsave("figs\\tagfailure-month.tiff",
-#        pmty, device="tiff", 
-#        width=6.5, height=4, units="in", dpi=300)
+ggsave("figs\\tagfailure-year.tiff",
+       pyty, device="tiff",
+       width=6.5, height=4, units="in", dpi=300)
+
+ggsave("figs\\tagfailure-month.tiff",
+       pmty, device="tiff",
+       width=6.5, height=4, units="in", dpi=300)
 
 df2 <- data.frame(md =1-((1-md)^12), 
                   lhdi95= 1-((1-lhdi95)^12),
