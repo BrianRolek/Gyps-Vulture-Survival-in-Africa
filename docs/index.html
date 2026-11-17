@@ -1403,18 +1403,18 @@ $obsstates.rowsums
 [1] 1 1 1 1
 
 $truestates.probs
-           [,1]       [,2]      [,3]      [,4]
-[1,] 0.01154143 0.03196799 0.2537214 0.7027692
-[2,] 0.00000000 1.00000000 0.0000000 0.0000000
-[3,] 0.00000000 0.00000000 1.0000000 0.0000000
-[4,] 0.00000000 0.00000000 0.0000000 1.0000000
+           [,1]      [,2]      [,3]      [,4]
+[1,] 0.06766298 0.2827198 0.1254486 0.5241686
+[2,] 0.00000000 1.0000000 0.0000000 0.0000000
+[3,] 0.00000000 0.0000000 1.0000000 0.0000000
+[4,] 0.00000000 0.0000000 0.0000000 1.0000000
 
 $obsstates.probs
-     [,1]      [,2]      [,3]      [,4]      [,5]
-[1,]    1 0.0000000 0.0000000 0.0000000 0.0000000
-[2,]    0 0.3428728 0.0000000 0.0000000 0.6571272
-[3,]    0 0.0000000 0.6389145 0.0000000 0.3610855
-[4,]    0 0.1238064 0.4198481 0.2190664 0.2372791</code></pre>
+     [,1]      [,2]       [,3]      [,4]        [,5]
+[1,]    1 0.0000000 0.00000000 0.0000000 0.000000000
+[2,]    0 0.9410267 0.00000000 0.0000000 0.058973331
+[3,]    0 0.0000000 0.85283167 0.0000000 0.147168325
+[4,]    0 0.1384893 0.05029432 0.8025373 0.008679006</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
@@ -2055,7 +2055,7 @@ $obsstates.probs
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/tag failure age-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>(A) Yearly probabilities (above)</figcaption>
+<figcaption>(A) Correlations between tag age and year (above)</figcaption>
 </figure>
 </div>
 </div>
@@ -2065,7 +2065,7 @@ $obsstates.probs
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/tag failure age-2.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>(B) Monthly probabilities (above)</figcaption>
+<figcaption>(B) Yearly probabilities (above)</figcaption>
 </figure>
 </div>
 </div>
@@ -2075,7 +2075,7 @@ $obsstates.probs
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/tag failure age-3.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>(A) Yearly probabilities (above)</figcaption>
+<figcaption>(C) Monthly probabilities (above)</figcaption>
 </figure>
 </div>
 </div>
@@ -2408,7 +2408,7 @@ $obsstates.probs
 <span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">lapply</span>(s.diffs, HDInterval<span class="sc">::</span>hdi, <span class="at">credMass=</span><span class="fl">0.95</span>) <span class="sc">|&gt;</span> <span class="fu">do.call</span>(<span class="at">what=</span>rbind) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">3</span>) ) </span>
 <span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>surv.diffs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell quarto-layout-panel" data-layout-ncol="1" data-tbl-cap="Table S5. Compare survival differences by age class.">
+<div class="cell quarto-layout-panel" data-tbl-cap="Table S5. Compare survival differences by age class." data-layout-ncol="1">
 <div class="quarto-layout-row">
 <div class="kable-table quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <table class="caption-top table table-sm table-striped small">
@@ -2570,9 +2570,10 @@ $obsstates.probs
 <span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>pg_pd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/mpm-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Figure S6. Histograms of (A) estimated yearly population growth rate and (B) estimated percent change over 15 years.</figcaption>
 </figure>
 </div>
 </div>
@@ -3291,68 +3292,70 @@ $obsstates.probs
 <span id="cb51-211"><a href="#cb51-211" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
 <span id="cb51-212"><a href="#cb51-212" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
 <span id="cb51-213"><a href="#cb51-213" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S3. Predicted tag failure in response to age of transmitter." </span></span>
-<span id="cb51-214"><a href="#cb51-214" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
-<span id="cb51-215"><a href="#cb51-215" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(A) Yearly probabilities (above)" </span></span>
-<span id="cb51-216"><a href="#cb51-216" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(B) Monthly probabilities (above)" </span></span>
-<span id="cb51-217"><a href="#cb51-217" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1 </span></span>
-<span id="cb51-218"><a href="#cb51-218" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page </span></span>
-<span id="cb51-219"><a href="#cb51-219" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb51-220"><a href="#cb51-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-221"><a href="#cb51-221" aria-hidden="true" tabindex="-1"></a>We plotted predictions of tag failure in response to year of study.</span>
-<span id="cb51-222"><a href="#cb51-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-225"><a href="#cb51-225" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb51-226"><a href="#cb51-226" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tag failure year </span></span>
-<span id="cb51-227"><a href="#cb51-227" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb51-228"><a href="#cb51-228" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
-<span id="cb51-229"><a href="#cb51-229" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S4. Predicted tag failure in response to year." </span></span>
-<span id="cb51-230"><a href="#cb51-230" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
-<span id="cb51-231"><a href="#cb51-231" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(A) Yearly probabilities (above)" </span></span>
-<span id="cb51-232"><a href="#cb51-232" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(B) Monthly probabilities (above)" </span></span>
-<span id="cb51-233"><a href="#cb51-233" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1 </span></span>
-<span id="cb51-234"><a href="#cb51-234" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page</span></span>
-<span id="cb51-235"><a href="#cb51-235" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb51-236"><a href="#cb51-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-237"><a href="#cb51-237" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.4 Survival by study period</span></span>
-<span id="cb51-238"><a href="#cb51-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-239"><a href="#cb51-239" aria-hidden="true" tabindex="-1"></a>We plotted predictions of survival by study period and compared to predictions of all study periods combined.</span>
-<span id="cb51-240"><a href="#cb51-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-243"><a href="#cb51-243" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb51-244"><a href="#cb51-244" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: survival period </span></span>
-<span id="cb51-245"><a href="#cb51-245" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb51-246"><a href="#cb51-246" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
-<span id="cb51-247"><a href="#cb51-247" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S5. Predicted survival (yearly) by study period (A) and combined (B)."</span></span>
-<span id="cb51-248"><a href="#cb51-248" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb51-249"><a href="#cb51-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-252"><a href="#cb51-252" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb51-253"><a href="#cb51-253" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: survival estimates </span></span>
-<span id="cb51-254"><a href="#cb51-254" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb51-255"><a href="#cb51-255" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
-<span id="cb51-256"><a href="#cb51-256" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Table S4. Yearly survival estimates. Survival during early, late, and combined periods."</span></span>
-<span id="cb51-257"><a href="#cb51-257" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb51-258"><a href="#cb51-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-259"><a href="#cb51-259" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.5 Survival differences by age class</span></span>
-<span id="cb51-260"><a href="#cb51-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-263"><a href="#cb51-263" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb51-264"><a href="#cb51-264" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: survival differences </span></span>
-<span id="cb51-265"><a href="#cb51-265" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb51-266"><a href="#cb51-266" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
-<span id="cb51-267"><a href="#cb51-267" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Table S5. Compare survival differences by age class."</span></span>
-<span id="cb51-268"><a href="#cb51-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1</span></span>
-<span id="cb51-269"><a href="#cb51-269" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">kableExtra.auto_format =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb51-270"><a href="#cb51-270" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb51-271"><a href="#cb51-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-272"><a href="#cb51-272" aria-hidden="true" tabindex="-1"></a><span class="fu">## 6. Matrix population model</span></span>
-<span id="cb51-273"><a href="#cb51-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-276"><a href="#cb51-276" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb51-277"><a href="#cb51-277" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false </span></span>
-<span id="cb51-278"><a href="#cb51-278" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">read_chunk</span>(<span class="st">'R/06-matrix-pop-model.R'</span>)</span>
-<span id="cb51-279"><a href="#cb51-279" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb51-280"><a href="#cb51-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-283"><a href="#cb51-283" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb51-284"><a href="#cb51-284" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: mpm </span></span>
-<span id="cb51-285"><a href="#cb51-285" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
-<span id="cb51-286"><a href="#cb51-286" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb51-287"><a href="#cb51-287" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb51-214"><a href="#cb51-214" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap:</span></span>
+<span id="cb51-215"><a href="#cb51-215" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(A) Correlations between tag age and year (above)" </span></span>
+<span id="cb51-216"><a href="#cb51-216" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(B) Yearly probabilities (above)" </span></span>
+<span id="cb51-217"><a href="#cb51-217" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(C) Monthly probabilities (above)" </span></span>
+<span id="cb51-218"><a href="#cb51-218" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1 </span></span>
+<span id="cb51-219"><a href="#cb51-219" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page </span></span>
+<span id="cb51-220"><a href="#cb51-220" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb51-221"><a href="#cb51-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-222"><a href="#cb51-222" aria-hidden="true" tabindex="-1"></a>We plotted predictions of tag failure in response to year of study.</span>
+<span id="cb51-223"><a href="#cb51-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-226"><a href="#cb51-226" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb51-227"><a href="#cb51-227" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tag failure year </span></span>
+<span id="cb51-228"><a href="#cb51-228" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb51-229"><a href="#cb51-229" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
+<span id="cb51-230"><a href="#cb51-230" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S4. Predicted tag failure in response to year." </span></span>
+<span id="cb51-231"><a href="#cb51-231" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-subcap: </span></span>
+<span id="cb51-232"><a href="#cb51-232" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(A) Yearly probabilities (above)" </span></span>
+<span id="cb51-233"><a href="#cb51-233" aria-hidden="true" tabindex="-1"></a><span class="co">#| - "(B) Monthly probabilities (above)" </span></span>
+<span id="cb51-234"><a href="#cb51-234" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1 </span></span>
+<span id="cb51-235"><a href="#cb51-235" aria-hidden="true" tabindex="-1"></a><span class="co">#| column: page</span></span>
+<span id="cb51-236"><a href="#cb51-236" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb51-237"><a href="#cb51-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-238"><a href="#cb51-238" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.4 Survival by study period</span></span>
+<span id="cb51-239"><a href="#cb51-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-240"><a href="#cb51-240" aria-hidden="true" tabindex="-1"></a>We plotted predictions of survival by study period and compared to predictions of all study periods combined.</span>
+<span id="cb51-241"><a href="#cb51-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-244"><a href="#cb51-244" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb51-245"><a href="#cb51-245" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: survival period </span></span>
+<span id="cb51-246"><a href="#cb51-246" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb51-247"><a href="#cb51-247" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
+<span id="cb51-248"><a href="#cb51-248" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S5. Predicted survival (yearly) by study period (A) and combined (B)."</span></span>
+<span id="cb51-249"><a href="#cb51-249" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb51-250"><a href="#cb51-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-253"><a href="#cb51-253" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb51-254"><a href="#cb51-254" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: survival estimates </span></span>
+<span id="cb51-255"><a href="#cb51-255" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb51-256"><a href="#cb51-256" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
+<span id="cb51-257"><a href="#cb51-257" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Table S4. Yearly survival estimates. Survival during early, late, and combined periods."</span></span>
+<span id="cb51-258"><a href="#cb51-258" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb51-259"><a href="#cb51-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-260"><a href="#cb51-260" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5.5 Survival differences by age class</span></span>
+<span id="cb51-261"><a href="#cb51-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-264"><a href="#cb51-264" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb51-265"><a href="#cb51-265" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: survival differences </span></span>
+<span id="cb51-266"><a href="#cb51-266" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb51-267"><a href="#cb51-267" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false </span></span>
+<span id="cb51-268"><a href="#cb51-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Table S5. Compare survival differences by age class."</span></span>
+<span id="cb51-269"><a href="#cb51-269" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 1</span></span>
+<span id="cb51-270"><a href="#cb51-270" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">kableExtra.auto_format =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb51-271"><a href="#cb51-271" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb51-272"><a href="#cb51-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-273"><a href="#cb51-273" aria-hidden="true" tabindex="-1"></a><span class="fu">## 6. Matrix population model</span></span>
+<span id="cb51-274"><a href="#cb51-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-277"><a href="#cb51-277" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb51-278"><a href="#cb51-278" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false </span></span>
+<span id="cb51-279"><a href="#cb51-279" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">read_chunk</span>(<span class="st">'R/06-matrix-pop-model.R'</span>)</span>
+<span id="cb51-280"><a href="#cb51-280" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb51-281"><a href="#cb51-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-284"><a href="#cb51-284" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb51-285"><a href="#cb51-285" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: mpm </span></span>
+<span id="cb51-286"><a href="#cb51-286" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true </span></span>
+<span id="cb51-287"><a href="#cb51-287" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb51-288"><a href="#cb51-288" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Figure S6. Histograms of (A) estimated yearly population growth rate and (B) estimated percent change over 15 years."</span></span>
+<span id="cb51-289"><a href="#cb51-289" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

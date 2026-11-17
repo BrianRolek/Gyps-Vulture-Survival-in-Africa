@@ -175,9 +175,10 @@ We plotted predictions of tag failure in response to age of transmitter.
 #| eval: true 
 #| warning: false 
 #| fig-cap: "Figure S3. Predicted tag failure in response to age of transmitter." 
-#| fig-subcap: 
-#| - "(A) Yearly probabilities (above)" 
-#| - "(B) Monthly probabilities (above)" 
+#| fig-subcap:
+#| - "(A) Correlations between tag age and year (above)" 
+#| - "(B) Yearly probabilities (above)" 
+#| - "(C) Monthly probabilities (above)" 
 #| layout-ncol: 1 
 #| column: page 
 ```
@@ -236,4 +237,5 @@ knitr::read_chunk('R/06-matrix-pop-model.R')
 #| label: mpm 
 #| eval: true 
 #| warning: false
+#| fig-cap: "Figure S6. Histograms of (A) estimated yearly population growth rate and (B) estimated percent change over 15 years."
 ```
